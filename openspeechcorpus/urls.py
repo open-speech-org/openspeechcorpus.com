@@ -17,8 +17,10 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from openspeechcorpus.apps.static_html import urls as static_html_urls
+from openspeechcorpus.apps.authentication import urls as authentication_urls
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include(static_html_urls))
+    url(r'^', include(static_html_urls)),
+    url(r'^auth/', include(authentication_urls))
 ]

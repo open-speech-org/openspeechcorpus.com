@@ -1,6 +1,9 @@
 from django.db import models
+
 from openspeechcorpus.apps.core.models import AudioData
 # Create your models here.
+
+
 class Tale(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()

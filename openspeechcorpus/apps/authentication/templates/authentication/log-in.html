@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Log in' %}
+{% endblock %}
+
+{% block content %}
+    <div class="container center">
+        <div class="row">
+            <h1>{% trans 'Log in' %}</h1>
+        </div>
+    {% if user.is_authenticated %}
+                    {% if user.is_anonymous %}
+                        {% trans 'Please activate your account'%}
+                    {% else %}
+                        {% blocktrans %}
+                            You are logged as {{ user.username }}
+                        {% endblocktrans %}
+                        <a href="{% url 'log-out' %}">{% trans 'Log out' %}</a>
+                    {% endif %}
+                {%  else %}
+        <div class="row">
+
+            {% if form.errors %}
+
+                <p>{% trans 'Invalid username or password' %}</p>
+            {% endif %}
+            <form class="col s12" method="POST" action="{% url 'log-in' %}">
+                {%  csrf_token %}
+                <div class="input-field">
+                    <i class="mdi-action-account-circle prefix"></i>
+                    <input type="text" name="username">
+                    <label for="username">{% trans 'Username' %}</label>
+                </div>
+                <div class="input-field">
+                    <i class="mdi-action-input prefix"></i>
+                    <input type="password" name="password">
+                    <label for="password">{% trans 'Password' %}</label>
+                </div>
+                <br/>
+                <button type="submit" class="btn waves-effect waves-light">
+                    {% trans 'Log in' %}
+                    <i class="mdi-content-send right"></i>
+                </button>
+                <input type="hidden" name="next" value="{% url 'index' %}" />
+                <br/>
+                <a class="left"  href="{% url 'password_reset' %}">
+                   {% trans 'Forgot password?' %}
+                </a>
+                <a class="right" href="{% url 'sign-up' %}">
+                    {% trans 'Sign up' %}
+                </a>
+                <!--<br/>-->
+            </form>
+        </div>
+    {% endif %}
+    </div>
+{% endblock %}

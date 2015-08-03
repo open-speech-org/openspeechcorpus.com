@@ -40,6 +40,8 @@ INSTALLED_APPS = (
 
     # Project Apps
     'openspeechcorpus.apps.static_html',
+    'openspeechcorpus.apps.core',
+    'openspeechcorpus.apps.authentication',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -107,3 +109,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ma0@contraslash.com'
+EMAIL_HOST_PASSWORD = 'Sumao58001994@'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'ma0@contraslash.com'

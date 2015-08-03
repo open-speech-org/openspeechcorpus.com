@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Sign up successfully' %}
+{% endblock %}
+
+{% block content %}
+    <div class="container center">
+        <div class="row">
+            <h1>{% trans 'Sign up confirm' %}</h1>
+        </div>
+        <p>{{ status }}</p>
+    </div>
+{% endblock %}

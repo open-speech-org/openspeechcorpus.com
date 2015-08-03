@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Sign up' %}
+{% endblock %}
+
+{% block content %}
+    <div class="container center">
+        <div class="row">
+            <h1>{% trans 'Sign up' %}</h1>
+        </div>
+                {% if user.is_authenticated %}
+                    {% if user.is_anonymous %}
+                        {% trans 'Please activate your account'%}
+                    {% else %}
+                        {% blocktrans %}
+                            You are logged as {{ user.username }}
+                        {% endblocktrans %}
+                        <a href="{% url 'log-out' %}">{% trans 'Log out' %}</a>
+                    {% endif %}
+                {%  else %}
+
+                    {% if userformerrors %}
+                        {{ userformerrors }}
+                    {% endif %}
+                    <form method="POST">
+                    {%  csrf_token %}
+                        {% for item in userform %}
+                            <div class="input-field">
+                                {{ item }}
+                                <label for="{{ item.name }}">{{ item.label }}</label>
+                            </div>
+                        {% endfor %}
+
+                      <button type="submit" class="btn waves-effect waves-light">
+                          {% trans 'Sign up' %}
+                          <i class="mdi-content-send right"></i>
+                      </button>
+                  </form>
+                {%  endif %}
+
+    </div>
+{% endblock %}
