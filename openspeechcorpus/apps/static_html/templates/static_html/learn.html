@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Open Speech Corpus' %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+
+    <h1 class="center">
+        {% trans "Learn about speech recognition" %}
+    </h1>
+
+    <p>
+        {% blocktrans  %}
+            Make your projects listen! Some tutorials to learn about speech recognition tools
+        {% endblocktrans %}
+    </p>
+    </div>
+{% endblock %}

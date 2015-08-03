@@ -1,0 +1,131 @@
+{% load staticfiles %}
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    {% block static-css %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+
+    {% endblock %}
+
+    {% block specific-css %}
+
+    {% endblock %}
+    <title>{% block title %} {% endblock %}</title>
+</head>
+<body >
+
+    {% block navbar %}
+        <header class="site-header">
+            <div class="navbar-fixed">
+                <nav class="light-blue darken-4  waves-effect waves-light">
+                    <div class="nav-wrapper">
+                        <div class="container" >
+
+                            <a href="{% url 'index' %}" class="brand-logo" id="logo-container">
+                                <img src="" id="front-page-logo" class="hide-on-med-and-down responsive-img"/>
+                                OPS
+                            </a>
+                            <ul class="right hide-on-med-and-down">
+                                <li>
+                                    <a href="{% url 'download' %}">
+                                        {% trans "Download" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'donate' %}">
+                                        {% trans "Donate" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'rate' %}">
+                                        {% trans "Rate" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'listen' %}">
+                                        {% trans "Listen" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'learn' %}">
+                                        {% trans "Learn" %}
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul id="nav-mobile" class="right side-nav ">
+                                <li>
+                                    <a href="{% url 'download' %}">
+                                        {% trans "Download" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'donate' %}">
+                                        {% trans "Donate" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'rate' %}">
+                                        {% trans "Rate" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'listen' %}">
+                                        {% trans "Listen" %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'learn' %}">
+                                        {% trans "Learn" %}
+                                    </a>
+                                </li>
+
+                            </ul>
+                            <a class="button-collapse" href="#" data-activates="nav-mobile">
+                                <i class="mdi-navigation-menu"></i></a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+
+
+    {% endblock %}
+    {% block content %}
+
+    {% endblock %}
+
+    {% block wait %}
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <h3 class="center">
+            We're building the site
+        </h3>
+
+        <h5 class="center">
+             Wanna Join us? Send us an email <a href="mailto:ma0@contraslash.com">here</a>
+        </h5>
+    {% endblock %}
+
+    {% block footer %}
+
+    {% endblock %}
+
+    {% block static-js %}
+        <script type="application/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+        <script type="application/javascript" src="{% static 'js/app.js' %}"></script>
+    {% endblock %}
+
+    {% block specific-js %}
+
+    {% endblock %}
+</body>
+
+</html>
+

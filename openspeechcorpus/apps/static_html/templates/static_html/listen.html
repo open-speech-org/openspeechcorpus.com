@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Open Speech Corpus' %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+
+    <h1 class="center">
+        {% trans "Listen to your peers!" %}
+    </h1>
+
+    <p>
+        {% blocktrans  %}
+            Listen tales recorded by our collaborators
+        {% endblocktrans %}
+    </p>
+    </div>
+{% endblock %}

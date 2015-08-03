@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Open Speech Corpus' %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+
+    <h1 class="center">
+        {% trans "Donate your voice!" %}
+    </h1>
+
+    <p>
+        {% blocktrans  %}
+            A collaborative space to donate and get open speech resources
+        {% endblocktrans %}
+    </p>
+    </div>
+{% endblock %}

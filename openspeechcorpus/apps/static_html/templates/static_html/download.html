@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Open Speech Corpus' %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+
+    <h1 class="center">
+        {% trans "Download our apps" %}
+    </h1>
+
+    <p>
+        {% blocktrans  %}
+            An easier way to collaborate from anywhere anytime
+        {% endblocktrans %}
+    </p>
+    <p>
+        {% blocktrans %}
+            Android App coming soon
+        {% endblocktrans %}
+    </p>
+    </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block title %}
+    {% trans 'Open Speech Corpus' %}
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+
+    <h1 class="center">
+        {% trans "Rate records" %}
+    </h1>
+
+    <p>
+        {% blocktrans  %}
+            Listen our records and rate them
+        {% endblocktrans %}
+    </p>
+    </div>
+{% endblock %}
