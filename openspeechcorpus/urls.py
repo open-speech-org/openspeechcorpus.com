@@ -18,9 +18,23 @@ from django.contrib import admin
 
 from openspeechcorpus.apps.static_html import urls as static_html_urls
 from openspeechcorpus.apps.authentication import urls as authentication_urls
+from openspeechcorpus.apps.mobile_api import urls as mobile_api_urls
+from openspeechcorpus.apps.recordings import urls as recordings_urls
+from . import settings
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include(static_html_urls)),
-    url(r'^auth/', include(authentication_urls))
+    url(r'^auth/', include(authentication_urls)),
+    url(r'^api/', include(mobile_api_urls)),
+    url(r'^recordings/', include(recordings_urls)),
+
+    # Media URL
+    url(
+        r'^media/(?P<path>.*)$',
+        'django.views.static.serve',
+        {
+            'document_root': settings.MEDIA_ROOT
+        }
+    ),
 ]

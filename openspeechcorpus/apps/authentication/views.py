@@ -11,7 +11,7 @@ from django.template.context import Context
 
 
 from .forms import UserForm, User
-from .models import ActivationToken
+from .models import UserProfile
 
 from hashlib import sha1
 from random import random

@@ -1,0 +1,5 @@
+nav {
+    overflow: visible !important;
+    z-index: auto;
+    will-change: contents !important;
+}

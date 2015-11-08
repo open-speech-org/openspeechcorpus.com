@@ -42,6 +42,13 @@ INSTALLED_APPS = (
     'openspeechcorpus.apps.static_html',
     'openspeechcorpus.apps.core',
     'openspeechcorpus.apps.authentication',
+    'openspeechcorpus.apps.tales',
+    'openspeechcorpus.apps.mobile_api',
+    'openspeechcorpus.apps.recordings',
+
+
+    # Third party Apps
+    'rest_framework',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -110,9 +117,26 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static_dist")
+
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'ma0@contraslash.com'
 EMAIL_HOST_PASSWORD = 'Sumao58001994@'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'ma0@contraslash.com'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        # 'core.rest_authentication.BackboneBasicAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+       # 'rest_framework.permissions.AllowAny',
+    ),
+}
+
+# Media conf
+MEDIA_ROOT = os.path.join(BASE_DIR,  'media')
+# MEDIA_ROOT = '/var/www/html/openspeechcorpus/media'
+
+MEDIA_URL = '/media/'

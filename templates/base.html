@@ -20,15 +20,20 @@
     {% block navbar %}
         <header class="site-header">
             <div class="navbar-fixed">
-                <nav class="light-blue darken-4  waves-effect waves-light">
+                <nav class="black  waves-effect waves-light">
                     <div class="nav-wrapper">
                         <div class="container" >
 
                             <a href="{% url 'index' %}" class="brand-logo" id="logo-container">
                                 <img src="" id="front-page-logo" class="hide-on-med-and-down responsive-img"/>
-                                OPS
+                                &lt;OPS&gt;
                             </a>
                             <ul class="right hide-on-med-and-down">
+                                <li>
+                                    <a href="{% url 'recordings_list' %}">
+                                        {% trans "Recordings" %}
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="{% url 'download' %}">
                                         {% trans "Download" %}
@@ -56,6 +61,11 @@
                                 </li>
                             </ul>
                             <ul id="nav-mobile" class="right side-nav ">
+                                <li>
+                                    <a href="{% url 'recordings_list' %}">
+                                        {% trans "Recordings" %}
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="{% url 'download' %}">
                                         {% trans "Download" %}

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col s4">{% trans 'name' %}</div>
+            <div class="col s8">{{ recording.name }}</div>
+        </div>
+        <div class="row">
+            <div class="col s4">{% trans 'text' %}</div>
+            <div class="col s8">{{ recording.text }}</div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <audio controls>
+                    <source src="/media/{{ recording.audiofile }}">
+                </audio>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col s4"></div>
+            <div class="col s8"></div>
+        </div>
+        <div class="row">
+            <div class="col s4"></div>
+            <div class="col s8"></div>
+        </div>
+    </div>
+{% endblock %}
