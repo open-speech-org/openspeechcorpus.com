@@ -1,0 +1,5 @@
+[client]
+database = openspeechcorpus
+user = ops_user
+password = 0P3NSP33ch_C0rpus
+default-character-set = utf8

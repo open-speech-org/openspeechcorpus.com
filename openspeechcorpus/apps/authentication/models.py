@@ -34,3 +34,6 @@ class Permission(models.Model):
 
 class AnonymousUserProfile(models.Model):
     anonymous_name = models.CharField(max_length=100)
+
+    def __unicode__(self):
+        return self.anonymous_name

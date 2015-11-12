@@ -6,6 +6,7 @@ from . import serializers as mobile_api_serializer
 from openspeechcorpus.apps.tales import serializers as tales_serializers
 from openspeechcorpus.apps.tales import models as tales_models
 from openspeechcorpus.apps.authentication import models as authentication_models
+from openspeechcorpus.apps.suggestions import serializers as suggestions_serializers
 
 
 # Create your views here.
@@ -46,13 +47,34 @@ class UploadTaleSetenceView(APIView):
         if audio_upload_tale_data.is_valid(True):
             print("True")
             audio_upload_tale_data.save()
-            return Response({
-                'state': 'Success',
-                'error': 0
-            })
+            return Response(
+                {
+                    'state': 'Success',
+                    'error': 0
+                }
+                )
         else:
             print("False")
-            return Response({
-                'state': 'Failure',
-                'error': 1
-            })
+            return Response(
+                {
+                    'state': 'Failure',
+                    'error': 1
+                }
+            )
+
+class RegisterSuggestion(APIView):
+
+    def post(self, request, format=None):
+        suggestion_serializer = suggestions_serializers.SuggestionModelSerializer(data=request.data)
+
+        if suggestion_serializer.is_valid(True):
+            suggestion_serializer.save()
+            print("True")
+            return Response(suggestion_serializer.data)
+        else:
+            return Response(
+                {
+                    'state': 'Failure',
+                    'error': 1
+                }
+            )

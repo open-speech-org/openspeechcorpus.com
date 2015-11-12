@@ -20,3 +20,6 @@ class AudioData(models.Model):
 class AnonymousAudioData(models.Model):
     audio = models.ForeignKey(AudioData)
     user = models.ForeignKey(AnonymousUserProfile)
+
+    def __unicode__(self):
+        return unicode(self.user) + ": " +unicode(self.audio)

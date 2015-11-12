@@ -25,7 +25,7 @@ SECRET_KEY = '^++51d6&viy&)$i_ky)d+8-h5qd$_+qqu8)&#!d@rr2kc*j8)q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["openspeechcorpus.com",]
 
 
 # Application definition
@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'openspeechcorpus.apps.tales',
     'openspeechcorpus.apps.mobile_api',
     'openspeechcorpus.apps.recordings',
+    'openspeechcorpus.apps.suggestions',
 
 
     # Third party Apps
@@ -86,12 +87,26 @@ WSGI_APPLICATION = 'openspeechcorpus.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
+# Migration to
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+if not DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+                'read_default_file': os.path.join(BASE_DIR,  'database.cnf'),
+            },
+        }
+    }
+
+
 
 
 # Internationalization
@@ -137,6 +152,7 @@ REST_FRAMEWORK = {
 
 # Media conf
 MEDIA_ROOT = os.path.join(BASE_DIR,  'media')
-# MEDIA_ROOT = '/var/www/html/openspeechcorpus/media'
+if not DEBUG:
+    MEDIA_ROOT = '/var/www/html/openspeechcorpus/media'
 
 MEDIA_URL = '/media/'

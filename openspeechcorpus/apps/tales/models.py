@@ -44,6 +44,8 @@ class SentenceTaleSpeech(models.Model):
     tale_sentence = models.ForeignKey(TaleSentence)
     audio = models.ForeignKey(AudioData)
 
+    def __unicode__(self):
+        return unicode(self.tale_sentence) + " " + unicode(self.audio)
 
 
 
