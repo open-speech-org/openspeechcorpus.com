@@ -27,7 +27,7 @@ class TalesSentencesView(APIView):
             anonymous_user.save()
             anonymous_user_sentence_serialized = mobile_api_serializer.AnonymousUserSentenceSerializer(
                 data={
-                    'anonymous_id': anonymous_user.id,
+                    'anonymous_user': anonymous_user.id,
                     'sentences': sentences_serialized.data
                 }
             )
@@ -75,6 +75,50 @@ class RegisterSuggestion(APIView):
             return Response(
                 {
                     'state': 'Failure',
+                    'error': 1
+                }
+            )
+
+class UpdateAnonymousUserProfile(APIView):
+
+    def post(self, request, format=None):
+        anonymous_id = request.data.get('anonymous_user', None)
+
+        if anonymous_id is not None:
+            anonymous_new_name = request.data.get('anonymous_user_name',None)
+            anonymous_new_picture = request.data.get('anonymous_user_picture',None)
+            try:
+                anonymous_user_profile = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_id)
+                print(anonymous_user_profile)
+                if anonymous_new_name is not None:
+                    anonymous_user_profile.anonymous_name = anonymous_new_name
+                if anonymous_new_picture is not None:
+                    anonymous_user_profile.anonymous_picture = anonymous_new_picture
+                anonymous_user_profile.save()
+                anonymous_user_profile_history = authentication_models.AnonymousUserProfileHistory(
+                    anonymous_user_profile=anonymous_user_profile,
+                    anonymous_name=anonymous_new_name,
+                    anonymous_picture=anonymous_new_picture
+                )
+                anonymous_user_profile_history.save()
+                return Response(
+                    {
+                        'state': 'Anonymous User Profile updated',
+                        'error': 0
+                    }
+                )
+
+            except authentication_models.AnonymousUserProfile.DoesNotExist:
+                return Response(
+                    {
+                        'state': 'Anonymous User Profile not found',
+                        'error': 404
+                    }
+                )
+        else:
+            return Response(
+                {
+                    'state': 'anonymous_user must be defined',
                     'error': 1
                 }
             )

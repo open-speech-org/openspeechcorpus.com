@@ -153,6 +153,6 @@ REST_FRAMEWORK = {
 # Media conf
 MEDIA_ROOT = os.path.join(BASE_DIR,  'media')
 if not DEBUG:
-    MEDIA_ROOT = '/var/www/html/openspeechcorpus/media'
+    MEDIA_ROOT = '/var/www/html/openspeechcorpus.com/media'
 
 MEDIA_URL = '/media/'

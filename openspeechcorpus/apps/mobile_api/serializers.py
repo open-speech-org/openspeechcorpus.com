@@ -40,7 +40,7 @@ class AudioTaleSentenceUploadSerializer(serializers.Serializer):
 
             )
             tale_sentence_speech.save()
-            anonymous_id = validated_data.get('anonymous_id', False)
+            anonymous_id = validated_data.get('anonymous_user', False)
             if anonymous_id:
                 anonymous_profile = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_id)
                 anonymous_audio_data = core_models.AnonymousAudioData(
@@ -53,5 +53,6 @@ class AudioTaleSentenceUploadSerializer(serializers.Serializer):
 
         except tales_models.TaleSentence.DoesNotExist:
             raise serializers.ValidationError(_('Tale sentence Does not exists'))
+
 
 

@@ -32,8 +32,22 @@ class Permission(models.Model):
     def __unicode__(self):
         return self.nombre
 
+
+# Custom authentication
+
 class AnonymousUserProfile(models.Model):
     anonymous_name = models.CharField(max_length=100)
+    anonymous_picture = models.ImageField(upload_to='anonymous_pictures', blank=True, null=True)
 
     def __unicode__(self):
         return self.anonymous_name
+
+
+class AnonymousUserProfileHistory(models.Model):
+    anonymous_user_profile = models.ForeignKey(AnonymousUserProfile)
+    anonymous_name = models.CharField(max_length=100, blank=True, null=True)
+    anonymous_picture = models.ImageField(upload_to='anonymous_pictures', blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now=True)
+
+    def __unicode__(self):
+        return unicode(self.timestamp) + " " + unicode(self.anonymous_user_profile)
