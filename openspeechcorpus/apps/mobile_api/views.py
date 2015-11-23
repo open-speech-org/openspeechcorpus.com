@@ -21,17 +21,19 @@ class TalesSentencesView(APIView):
         print sentences_serialized.data
 
         if request.query_params.get('new_user', False):
+            print "New user requested"
             anonymous_user = authentication_models.AnonymousUserProfile(
                 anonymous_name='anonymous_'+unicode(authentication_models.AnonymousUserProfile.objects.all().count())
             )
             anonymous_user.save()
+            print anonymous_user
             anonymous_user_sentence_serialized = mobile_api_serializer.AnonymousUserSentenceSerializer(
                 data={
                     'anonymous_user': anonymous_user.id,
                     'sentences': sentences_serialized.data
                 }
             )
-            anonymous_user_sentence_serialized.is_valid()
+            print anonymous_user_sentence_serialized.is_valid()
             print anonymous_user_sentence_serialized.data
             return Response(anonymous_user_sentence_serialized.data)
         else:
@@ -85,8 +87,8 @@ class UpdateAnonymousUserProfile(APIView):
         anonymous_id = request.data.get('anonymous_user', None)
 
         if anonymous_id is not None:
-            anonymous_new_name = request.data.get('anonymous_user_name',None)
-            anonymous_new_picture = request.data.get('anonymous_user_picture',None)
+            anonymous_new_name = request.data.get('anonymous_user_name', None)
+            anonymous_new_picture = request.data.get('anonymous_user_picture', None)
             try:
                 anonymous_user_profile = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_id)
                 print(anonymous_user_profile)

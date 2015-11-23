@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^++51d6&viy&)$i_ky)d+8-h5qd$_+qqu8)&#!d@rr2kc*j8)q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["openspeechcorpus.com",]
 

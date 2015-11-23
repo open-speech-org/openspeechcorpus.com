@@ -7,7 +7,7 @@ from openspeechcorpus.apps.core import models as core_models
 from openspeechcorpus.apps.authentication import models as authentication_models
 
 class AnonymousUserSentenceSerializer(serializers.Serializer):
-    anonymous_id = serializers.IntegerField()
+    anonymous_user = serializers.IntegerField()
     sentences = tales_serializers.TaleSentenceSerializer()
 
 
