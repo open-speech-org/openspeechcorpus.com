@@ -7,6 +7,8 @@ from openspeechcorpus.apps.tales import serializers as tales_serializers
 from openspeechcorpus.apps.tales import models as tales_models
 from openspeechcorpus.apps.authentication import models as authentication_models
 from openspeechcorpus.apps.suggestions import serializers as suggestions_serializers
+from openspeechcorpus.apps.core import serializers as core_serializers
+from openspeechcorpus.apps.core import models as core_models
 
 
 # Create your views here.
@@ -121,6 +123,46 @@ class UpdateAnonymousUserProfile(APIView):
             return Response(
                 {
                     'state': 'anonymous_user must be defined',
+                    'error': 1
+                }
+            )
+
+
+
+class UploadCustomAudio(APIView):
+
+    def post(self,request, format=None):
+        print request.data
+        audio_serializer = core_serializers.AudioDataSerializer(data=request.data)
+        if audio_serializer.is_valid(True):
+            audio_data = audio_serializer.save()
+            print(audio_data)
+            anonymous_user_id = request.data.get('anonymous_user', None)
+            if anonymous_user_id is not None:
+                try:
+                    anonymous_user = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_user_id)
+                    anonymous_audio_data = core_models.AnonymousAudioData(
+                        audio=audio_data,
+                        user=anonymous_user
+                    )
+                    anonymous_audio_data.save()
+                except authentication_models.AnonymousUserProfile.DoesNotExist:
+                    return Response(
+                        {
+                            'state': 'Anonimous User not defined',
+                            'error': 0
+                        }
+                    )
+            return Response(
+                {
+                    'state': 'Success',
+                    'error': 0
+                }
+            )
+        else:
+            return Response(
+                {
+                    'state': 'Incomplete',
                     'error': 1
                 }
             )

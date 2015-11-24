@@ -17,6 +17,7 @@ class AudioData(models.Model):
     def __unicode__(self):
         return self.name
 
+
 class AnonymousAudioData(models.Model):
     audio = models.ForeignKey(AudioData)
     user = models.ForeignKey(AnonymousUserProfile)

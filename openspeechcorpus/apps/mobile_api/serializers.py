@@ -4,12 +4,18 @@ from django.utils.text import slugify
 from openspeechcorpus.apps.tales import serializers as tales_serializers
 from openspeechcorpus.apps.tales import models as tales_models
 from openspeechcorpus.apps.core import models as core_models
+from openspeechcorpus.apps.core import serializers as core_serializer
 from openspeechcorpus.apps.authentication import models as authentication_models
+
+
 
 class AnonymousUserSentenceSerializer(serializers.Serializer):
     anonymous_user = serializers.IntegerField()
     sentences = tales_serializers.TaleSentenceSerializer()
 
+class AnonymousUserCustomAudioSerializer(serializers.Serializer):
+    anonymous_user = serializers.IntegerField()
+    audio = core_serializer.AudioDataSerializer()
 
 
 class AudioTaleSentenceUploadSerializer(serializers.Serializer):

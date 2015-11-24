@@ -23,4 +23,9 @@ urlpatterns = [
         mobile_api_views.UpdateAnonymousUserProfile.as_view(),
         name="mobile_api_anonymous_user_profile_update"
     ),
+    url(
+        r'^custom/upload/',
+        mobile_api_views.UploadCustomAudio.as_view(),
+        name="mobile_api_custom_upload"
+    ),
 ]
