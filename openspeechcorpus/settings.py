@@ -23,8 +23,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^++51d6&viy&)$i_ky)d+8-h5qd$_+qqu8)&#!d@rr2kc*j8)q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-PRODUCTION = False
+DEBUG = False
+PRODUCTION = True
 
 ALLOWED_HOSTS = ["openspeechcorpus.com",]
 
@@ -47,6 +47,7 @@ INSTALLED_APPS = (
     'openspeechcorpus.apps.mobile_api',
     'openspeechcorpus.apps.recordings',
     'openspeechcorpus.apps.suggestions',
+    'openspeechcorpus.apps.user_profile',
 
 
     # Third party Apps

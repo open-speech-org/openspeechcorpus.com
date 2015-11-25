@@ -20,6 +20,7 @@ from openspeechcorpus.apps.static_html import urls as static_html_urls
 from openspeechcorpus.apps.authentication import urls as authentication_urls
 from openspeechcorpus.apps.mobile_api import urls as mobile_api_urls
 from openspeechcorpus.apps.recordings import urls as recordings_urls
+from openspeechcorpus.apps.user_profile import urls as user_profiles_urls
 from . import settings
 
 urlpatterns = [
@@ -28,6 +29,7 @@ urlpatterns = [
     url(r'^auth/', include(authentication_urls)),
     url(r'^api/', include(mobile_api_urls)),
     url(r'^recordings/', include(recordings_urls)),
+    url(r'^contributors/', include(user_profiles_urls)),
 
     # Media URL
     url(

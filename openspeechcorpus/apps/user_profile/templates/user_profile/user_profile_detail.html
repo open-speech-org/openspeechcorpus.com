@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if user_profile.anonymous_picture %}
+            <img src="/media/{{ user_profile.anonymous_picture }}" class="img-responsive col s4 offset-s4">
+        {% else %}
+            <h3 class="center-block">{% trans 'No picture uploaded' %}</h3>
+        {% endif %}
+    </div>
+    <div class="row">
+        <h3>
+            {{ user_profile.anonymous_name }}
+        </h3>
+    </div>
+    <div class="row">
+        <h5>{% trans 'Total recordings: ' %}{{ recordings|length }}</h5>
+
+    </div>
+    {% for record in recordings %}
+        <div class="card">
+            <div class="card-title black-text">
+{#                <a href="">#}
+                <a href="{% url 'recording_view' record.audio.slug %}">
+                    {{ record }}
+                </a>
+            </div>
+        </div>
+    {% empty %}
+        {% trans 'No records uploaded' %}
+    {% endfor %}
+</div>
+{% endblock %}

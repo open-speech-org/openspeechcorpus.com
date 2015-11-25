@@ -47,7 +47,7 @@ class SignUp(TemplateView):
             user = User.objects.get(username=username)
 
             # Create and save user profile
-            activation_token = ActivationToken(user=user, activation_token=activation_key, expiration=key_expires)
+            activation_token = UserProfile(user=user, activation_token=activation_key, expiration=key_expires)
             activation_token.save()
 
             # Send email with activation key
@@ -90,8 +90,8 @@ class SignUpConfirm(TemplateView):
         if self.request.user.is_authenticated():
             HttpResponseRedirect(reverse_lazy('index'))
         try:
-            activation_token = ActivationToken.objects.get(activation_token=self.kwargs['token'])
-        except ActivationToken.DoesNotExist:
+            activation_token = UserProfile.objects.get(activation_token=self.kwargs['token'])
+        except UserProfile.DoesNotExist:
             return render(
                 request,
                 self.template_name,
