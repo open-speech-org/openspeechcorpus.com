@@ -1,8 +1,13 @@
+import random
+from itertools import chain
+
+from django.db import models
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from . import serializers as mobile_api_serializer
 
+
+from . import serializers as mobile_api_serializer
 from openspeechcorpus.apps.tales import serializers as tales_serializers
 from openspeechcorpus.apps.tales import models as tales_models
 from openspeechcorpus.apps.authentication import models as authentication_models
@@ -17,6 +22,10 @@ class TalesSentencesView(APIView):
     def get(self, request, format=None):
 
         offset = int(request.query_params.get('offset', 0))
+        if offset == 0:
+            random_tale = random.random()*tales_models.Tale.objects.count()
+            tale_sentences = tales_models.TaleSentence.objects.filter(tale__id=random_tale)
+            offset = tale_sentences[0].id - 1
         sentences = tales_models.TaleSentence.objects.all()[offset:offset+10]
         sentences_serialized = tales_serializers.TaleSentenceSerializer(data=sentences, many=True)
         sentences_serialized.is_valid()
@@ -166,3 +175,194 @@ class UploadCustomAudio(APIView):
                     'error': 1
                 }
             )
+
+class GetTales(APIView):
+
+    def get(self, request, format=None):
+        offset = request.query_params.get('offset', 0)
+        all_tales = tales_models.Tale.objects.filter(pk__gt=offset)
+        serializer = tales_serializers.TaleSerializer(all_tales, many=True)
+
+        return Response(
+            {
+                'state': 'Success',
+                'error': 0,
+                'tales': serializer.data
+            }
+        )
+        # else:
+        #     return Response(
+        #         {
+        #             'state': 'Failure',
+        #             'error': 1
+        #         }
+        #     )
+
+
+
+class GetAuthors(APIView):
+
+    def get(self, request, format=None):
+        offset = request.query_params.get('offset', 0)
+        all_authors = tales_models.Author.objects.filter(pk__gt=offset)
+        serializer = tales_serializers.AuthorSerializer(all_authors, many=True)
+        return Response(
+            {
+                'state': 'Success',
+                'error': 0,
+                'authors': serializer.data
+            }
+        )
+
+class GetTalesOfAuthor(APIView):
+
+    def get(self, request, *args, **kwargs):
+        author_id =  self.kwargs.get("author_id", None)
+        if author_id is not None:
+            try:
+                author = tales_models.Author.objects.get(pk=author_id)
+                tales = tales_models.Tale.objects.filter(author=author)
+                serializer = tales_serializers.TaleSerializer(tales, many=True)
+                return Response(
+                    {
+                        'state': 'Success',
+                        'error': 0,
+                        'tales': serializer.data
+                    }
+                )
+            except tales_models.Author.DoesNotExist:
+                return Response(
+                {
+                    'state': 'Author does not exists',
+                    'error': 1
+                }
+            )
+        else:
+            return Response(
+                {
+                    'state': 'No author id sended',
+                    'error': 1
+                }
+            )
+
+class GetSentencesOfTale(APIView):
+
+    def get(self, request, *args, **kwargs):
+
+        tale_id =  self.kwargs.get("tale_id", None)
+        if tale_id is not None:
+            try:
+                tale = tales_models.Tale.objects.get(pk=tale_id)
+                sentences = tales_models.TaleSentence.objects.filter(tale=tale)
+                serializer = tales_serializers.TaleSentenceSerializer(sentences, many=True)
+                return Response(
+                    {
+                        'state': 'Success',
+                        'error': 0,
+                        'sentences': serializer.data
+                    }
+                )
+            except tales_models.Tale.DoesNotExist:
+                return Response(
+                {
+                    'state': 'Tale does not exists',
+                    'error': 1
+                }
+            )
+        else:
+            return Response(
+                {
+                    'state': 'No tale id sended',
+                    'error': 1
+                }
+            )
+
+class VoteTale(APIView):
+
+    def post(self, request, format=None):
+        serializer = tales_serializers.TaleVoteSerializer(data=request.data)
+        if serializer.is_valid(True):
+            print serializer.validated_data
+            tale = serializer.validated_data['tale']
+            tale.calification = (tale.calification * tale.total_votes + serializer.validated_data['calification'])/\
+                                (tale.total_votes+1)
+            tale.total_votes += 1
+            tale.save()
+            serializer.save()
+
+            return Response(
+                {
+                    'state': 'Success',
+                    'error': 0,
+                    'data': serializer.data
+                }
+            )
+        else:
+            return Response(
+                {
+                    'state': 'Failure',
+                    'error': 1
+                }
+            )
+
+
+class GetRandomSentence(APIView):
+
+    def get(self, request, format=None):
+        print tales_models.TaleSentence.objects.count()
+        random_tale = random.random()*tales_models.Tale.objects.count()
+        tale_sentences = tales_models.TaleSentence.objects.filter(tale__id=random_tale)
+        random_sentence_id = tale_sentences[0].id
+        sentence = tales_models.TaleSentence.objects.get(pk=random_sentence_id)
+        serializer = tales_serializers.TaleSentenceSerializer(sentence)
+
+        return Response(serializer.data)
+
+class GetNextSentence(APIView):
+
+    def get(self, request, format=None):
+        print tales_models.TaleSentence.objects.count()
+        print request.query_params
+        random_tale = random.random()*tales_models.Tale.objects.count()
+        tale_sentences = tales_models.TaleSentence.objects.filter(tale__id=random_tale)
+        random_sentence_id = tale_sentences[0].id
+        sentence = tales_models.TaleSentence.objects.get(
+            pk=(int)(request.query_params.get(
+                'id',
+                random_sentence_id
+            ))+1
+        )
+        serializer = tales_serializers.TaleSentenceSerializer(sentence)
+
+        return Response(serializer.data)
+
+class RankingTable(APIView):
+
+    def get(self, request, format=None):
+        count_datas = core_models.AnonymousAudioData.objects.values('user').annotate(
+            user_count=models.Count('user')
+        ).order_by('-user_count')
+        for count_data in count_datas:
+            count_data['user'] = authentication_models.AnonymousUserProfile.objects.get(pk=count_data['user']).anonymous_name
+        print(count_datas)
+        return Response(count_datas)
+
+class DownloadMostReadedTales(APIView):
+
+    def get(self, request, format=None):
+        offset = request.query_params.get('offset', 50)
+        sentence_tales = tales_models.SentenceTaleSpeech.objects.values('tale_sentence').annotate(
+            count=models.Count('tale_sentence')
+        ).order_by('-count')[:offset]
+
+        audio_datas = []
+        print sentence_tales
+        for s in sentence_tales:
+            speech_tales = tales_models.SentenceTaleSpeech.objects.filter(tale_sentence__id=s['tale_sentence'])
+            for a in speech_tales:
+                audio_datas.append(
+                    a.audio
+                )
+
+        serializer = core_serializers.AudioDataSerializer(audio_datas, many=True)
+        return Response(serializer.data)

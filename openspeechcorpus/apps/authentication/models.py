@@ -40,7 +40,7 @@ class AnonymousUserProfile(models.Model):
     anonymous_picture = models.ImageField(upload_to='anonymous_pictures', blank=True, null=True)
 
     def __unicode__(self):
-        return self.anonymous_name
+        return unicode(self.id) + self.anonymous_name
 
 
 class AnonymousUserProfileHistory(models.Model):

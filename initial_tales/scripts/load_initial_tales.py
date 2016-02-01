@@ -17,6 +17,7 @@ def load_authors(file_path):
                 title = humanizate(d)
                 tale = tales_models.Tale(title=title, author=author)
                 tale.save()
+                print title
                 i = 1
                 tale_content = codecs.open(join(file_path, b, d), 'r', 'utf-8')
                 lines = tale_content.readlines()
@@ -38,4 +39,4 @@ def humanizate(string):
     return new_string
 
 # load_authors("../textos-procesados/")
-load_authors("initial_tales/textos-procesados")
+load_authors("initial_tales/nuevos-textos-procesados")

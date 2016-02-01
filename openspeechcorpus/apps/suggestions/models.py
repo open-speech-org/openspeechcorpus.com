@@ -7,3 +7,6 @@ class Suggestion(models.Model):
     suggestion = models.TextField()
     user = models.ForeignKey(User, blank=True, null=True)
     anonymous_user = models.ForeignKey(authentication_models.AnonymousUserProfile, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.suggestion

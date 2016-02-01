@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load staticfiles %}
 {% block title %}
     {% trans 'Open Speech Corpus' %}
+{% endblock %}
+{% block specific-css %}
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -11,10 +14,216 @@
         {% trans "Donate your voice!" %}
     </h1>
 
-    <p>
-        {% blocktrans  %}
-            A collaborative space to donate and get open speech resources
-        {% endblocktrans %}
-    </p>
+        <div class="row">
+            <h3>
+                {% trans "You're reading" %}
+            </h3>
+            <h5 id="tale_title">
+
+            </h5>
+                {% trans 'By' %}
+            <h5 id="tale_author">
+
+            </h5>
+
+        </div>
+
+        <div class="row">
+            <div class="col s11">
+                <textarea class="materialize-textarea" id="text" readonly>
+
+                </textarea>
+            </div>
+            <div class="col s1" >
+                <button onclick="loadNextText(this);">&gt;</button>
+            </div>
+        </div>
+    <div class="row">
+        <div class="col s6">
+            <button id="record" onclick="startRecording(this);">{% trans 'Record' %}</button>
+
+        </div>
+        <div class="col s6">
+            <button id="stop" onclick="stopRecording(this);" disabled>{% trans 'Stop' %}</button>
+        </div>
     </div>
+    <div class="row">
+        <div class="col s12">
+            <ul id="recordingslist"></ul>
+        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block specific-js %}
+    <script type="application/javascript" src="{% static 'js/Recorderjs-master/dist/recorder.js' %}"></script>
+    <script>
+
+
+  var audio_context;
+  var recorder;
+  var global_blob;
+  var sentence_id;
+
+  function startUserMedia(stream) {
+      console.log("Starting user media");
+    var input = audio_context.createMediaStreamSource(stream);
+    console.log('Media stream created.');
+
+    // Uncomment if you want the audio to feedback directly
+    //input.connect(audio_context.destination);
+    //console.log('Input connected to audio context destination.');
+
+    recorder = new Recorder(input);
+      console.log(recorder);
+    console.log('Recorder initialised.');
+  }
+
+  function startRecording(button) {
+      console.log(recorder);
+    recorder && recorder.record();
+
+    $('#record').prop('disabled', true);
+    $('#stop').prop('disabled', false);
+    console.log('Recording...');
+  }
+
+  function stopRecording(button) {
+    recorder && recorder.stop();
+    $('#record').prop('disabled', false);
+    $('#stop').prop('disabled', true);
+    console.log('Stopped recording.');
+
+    // create WAV download link using audio data blob
+      console.log("Before created link");
+    createDownloadLink();
+    console.log("After created link");
+    recorder.clear();
+  }
+
+  function createDownloadLink() {
+      console.log("Creating downloadins link");
+    recorder && recorder.exportWAV(function(blob) {
+        global_blob = blob;
+        var url = URL.createObjectURL(blob);
+        var li = document.createElement('li');
+        var au = document.createElement('audio');
+        var button = document.createElement('button');
+        button.onclick=uploadData;
+
+        au.controls = true;
+        au.src = url;
+        li.appendChild(au);
+        li.appendChild(button);
+        button.innerHTML="{% trans 'Upload' %}";
+        while (recordingslist.hasChildNodes())
+        {
+            recordingslist.removeChild(recordingslist.lastChild);
+        }
+      recordingslist.appendChild(li);
+
+
+    });
+  }
+
+
+  function uploadData()
+  {
+      var data = new FormData();
+      data.append('audio', global_blob);
+      data.append('tale_sentence_id', sentence_id);
+      data.append('anonymous_user', 7);
+
+      $.ajax({
+        url : "{% url 'mobile_api_tales_sentences_upload' %}",
+        type: 'POST',
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+          while (recordingslist.hasChildNodes())
+            {
+                recordingslist.removeChild(recordingslist.lastChild);
+            }
+            loadNextText();
+        },
+        error: function() {
+
+        }
+      });
+
+
+
+
+  }
+
+  function loadNextText()
+  {
+      $.ajax({
+        url : "{% url 'mobile_api_get_next_tale_sentence' %}?id="+sentence_id,
+        type: 'GET',
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            console.log(data);
+            $('#text').val(data.text);
+            sentence_id = data.id;
+            $('#tale_author').html(data.tale.author.name);
+            $('#tale_title').html(data.tale.title);
+        },
+        error: function() {
+
+        }
+      });
+  }
+
+  function loadRandomText()
+  {
+      $.ajax({
+        url : "{% url 'mobile_api_get_random_tale_sentence' %}",
+        type: 'GET',
+
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            console.log(data);
+            $('#text').val(data.text);
+            sentence_id = data.id;
+            $('#tale_author').html(data.tale.author.name);
+            console.log(data.tale.author.name);
+            $('#tale_title').html(data.tale.title);
+            console.log(data.tale.title);
+        },
+        error: function() {
+
+        }
+      });
+  }
+
+  window.onload = function init() {
+    try {
+      // webkit shim
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      navigator.getUserMedia = ( navigator.getUserMedia ||
+                       navigator.webkitGetUserMedia ||
+                       navigator.mozGetUserMedia ||
+                       navigator.msGetUserMedia);
+      window.URL = window.URL || window.webkitURL;
+
+      audio_context = new AudioContext;
+      console.log('Audio context set up.');
+      console.log('navigator.getUserMedia ' + (navigator.getUserMedia ? 'available.' : 'not present!'));
+    } catch (e) {
+      alert('No web audio support in this browser!');
+    }
+    console.log("Before get user media");
+    navigator.getUserMedia({audio: true}, startUserMedia, function(e) {
+        console.log("Failed to start usermedia");
+      console.log('No live audio input: ' + e);
+    });
+      console.log("After get user media");
+
+      loadRandomText();
+  };
+  </script>
+
 {% endblock %}

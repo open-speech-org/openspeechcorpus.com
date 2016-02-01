@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block content %}
+    <canvas id="myChart" width="400" height="400"></canvas>
+    <table class="bordered">
+        <thead>
+            <tr>
+                <th>
+                    {% trans 'Date' %}
+                </th>
+                <th>
+                    {% trans 'Count' %}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record_count in recordings_count %}
+                <tr>
+                    <td>
+                        {{ record_count.date }}
+                    </td>
+                    <td>
+                        {{ record_count.count }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block specific-js %}
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+    <script>
+        $(document).ready(function ()
+        {
+            var data = {
+    labels: [
+        {% for label in labels %}
+            "{{ label }}",
+        {% endfor %}
+    ],
+    datasets: [
+        {
+            label: "My First dataset",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(220,220,220,1)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: [{% for data in datas %}
+            "{{ data }}",
+        {% endfor %}]
+        }
+    ]
+};
+            var ctx = document.getElementById("myChart").getContext("2d");
+            var myLineChart = new Chart(ctx).Line(data, {});
+        });
+
+
+    </script>
+{% endblock %}

@@ -1,7 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from openspeechcorpus.apps.authentication.models import AnonymousUserProfile
+import subprocess
 
 # Create your models here.
 class AudioData(models.Model):
@@ -10,12 +13,16 @@ class AudioData(models.Model):
     text = models.TextField()
     audiofile = models.FileField(upload_to='audio-data')
     user = models.ForeignKey(User, blank=True, null=True)
-    created = models.DateTimeField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
     frecuency = models.CharField(max_length=12, blank=True, null=True)
     channels = models.CharField(max_length=2, blank=True, null=True)
+    verified = models.BooleanField(default=False)
+    length = models.DecimalField(decimal_places=3, default=0, max_digits=9)
 
     def __unicode__(self):
         return self.name
+
+
 
 
 class AnonymousAudioData(models.Model):
@@ -23,4 +30,51 @@ class AnonymousAudioData(models.Model):
     user = models.ForeignKey(AnonymousUserProfile)
 
     def __unicode__(self):
-        return unicode(self.user) + ": " +unicode(self.audio)
+        return unicode(self.user) + ": " + unicode(self.audio)
+
+
+class VerificationHistory(models.Model):
+    audio_data = models.ForeignKey(AudioData)
+    user = models.ForeignKey(User)
+    timestamp = models.DateTimeField(auto_now=True)
+    original_text = models.TextField()
+    correct_text = models.TextField()
+
+    def __unicode__(self):
+        return unicode(self.audio_data.id) + " " + unicode(self.user) + " " + unicode(self.audio_data)
+
+
+class AudioDatasMigration(models.Model):
+    old_user = models.ForeignKey(AnonymousUserProfile, related_name="old_user")
+    new_user = models.ForeignKey(AnonymousUserProfile, related_name="new_user")
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+@receiver(post_save, sender=AudioData)
+def calculate_length(sender, instance, **kwargs):
+    post_save.disconnect(calculate_length, sender=sender)
+    try:
+        ffprobe_out = subprocess.Popen(
+            "ffprobe " + str(instance.audiofile.file.name),
+            shell=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            close_fds=True
+        )
+        for line in ffprobe_out.stdout.readlines():
+            if "Duration" in line:
+                values = line.split(",")[0].split("Duration:")[1].split(":")
+                duration = 3600 * float(values[0]) + 60 * float(values[1]) + float(values[2])
+                ffprobe_out.stdout.close()
+                ffprobe_out.pipe_cloexec()
+                ffprobe_out.wait()
+                print(duration)
+                instance.length = duration
+
+        ffprobe_out.stdout.close()
+        ffprobe_out.pipe_cloexec()
+    except IOError:
+        print("0")
+        instance.length = 0
+    instance.save()
+    post_save.connect(calculate_length, sender=sender)

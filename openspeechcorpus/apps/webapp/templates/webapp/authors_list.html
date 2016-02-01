@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    {% for author in authors %}
+        <div class="card">
+            <div class="card-title black-text">
+                <a href="{% url 'webapp:tales_by_author_list' author.id %}">
+                    {{ author }}
+                </a>
+            </div>
+            <div class="card-content">
+                {{ author.biography }}
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

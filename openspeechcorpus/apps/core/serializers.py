@@ -1,4 +1,7 @@
 # -*- coding: UTF-8 -*-
+import random
+import string
+
 from rest_framework import serializers
 from django.utils.text import slugify
 
@@ -18,7 +21,7 @@ class AudioDataSerializer(serializers.ModelSerializer):
         audiofile = validated_data.get('audiofile', None)
         if audiofile is not None:
             name = ' '.join(text.split()[:5])
-            slug = slugify(text)
+            slug = slugify(text+" "+''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(5)))
             audio_data = core_models.AudioData(
                 name=name,
                 slug=slug,

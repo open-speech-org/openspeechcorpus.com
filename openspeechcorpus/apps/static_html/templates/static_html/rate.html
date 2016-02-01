@@ -6,6 +6,34 @@
 {% block content %}
     <div class="container">
 
+        <div class="row">
+            <div class="col s6">
+                {{ audio_data.id }}
+            </div>
+            <div class="col s6">
+                {{ audio_data.verified }}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col s12">
+                <audio controls>
+                    <source src="/media/{{ audio_data.audiofile }}">
+                </audio>
+            </div>
+
+        </div>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="row">
+            <input class="col s4 btn btn-primary black" type="submit" value="{% trans 'Validate' %}">
+            <a href="{% url 'rate_update' next_id %}" class="col s4 offset-s4 btn btn-primary black">{% trans 'Skip' %}</a>
+        </div>
+
+
+    </form>
+
 
     <h1 class="center">
         {% trans "Rate records" %}

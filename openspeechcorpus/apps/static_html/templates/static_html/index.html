@@ -11,10 +11,44 @@
         {% trans "Open Speech Corpus" %}
     </h1>
 
+    <div class="row">
+        <div class="col s12">
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>
+                            {% trans 'Rank' %}
+                        </th>
+                        <th>
+                            {% trans 'Contributor' %}
+                        </th>
+                        <th>
+                           {% trans 'Total Recordings' %}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rank in ranking %}
+                        <tr>
+                            <td>
+                                 {{ forloop.counter }}
+                             </td>
+                             <td>
+                                 <a href="{% url 'user_profiles_detail' rank.user.id %}">{{ rank.user }}</a>
+                             </td>
+                            <td>
+                                {{ rank.user_count }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
     <p>
         {% blocktrans  %}
             A collaborative space to donate and get open speech resources
-
         {% endblocktrans %}
     </p>
     </div>

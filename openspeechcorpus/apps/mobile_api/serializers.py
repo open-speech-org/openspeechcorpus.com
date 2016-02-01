@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from rest_framework import serializers
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import slugify
@@ -19,7 +21,7 @@ class AnonymousUserCustomAudioSerializer(serializers.Serializer):
 
 
 class AudioTaleSentenceUploadSerializer(serializers.Serializer):
-    anonymous_id = serializers.IntegerField(required=False)
+    anonymous_user = serializers.IntegerField(required=False)
     tale_sentence_id = serializers.IntegerField()
     text = serializers.CharField(max_length=10000, required=False)
     audio = serializers.FileField()
@@ -48,17 +50,23 @@ class AudioTaleSentenceUploadSerializer(serializers.Serializer):
             tale_sentence_speech.save()
             anonymous_id = validated_data.get('anonymous_user', False)
             if anonymous_id:
-                anonymous_profile = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_id)
-                anonymous_audio_data = core_models.AnonymousAudioData(
-                    audio=audio_data,
-                    user=anonymous_profile
-                )
-                anonymous_audio_data.save()
+                print anonymous_id
+                print "Exists"
+                try:
+                    anonymous_profile = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_id)
+                    anonymous_audio_data = core_models.AnonymousAudioData(
+                        audio=audio_data,
+                        user=anonymous_profile
+                    )
+                    anonymous_audio_data.save()
+                    print anonymous_audio_data
+                except authentication_models.AnonymousUserProfile.DoesNotExist:
+                    print("Anonymous does not exists")
+
+            else:
+                print("NO ANONIMOUS ID")
 
             return audio_data
 
         except tales_models.TaleSentence.DoesNotExist:
             raise serializers.ValidationError(_('Tale sentence Does not exists'))
-
-
-

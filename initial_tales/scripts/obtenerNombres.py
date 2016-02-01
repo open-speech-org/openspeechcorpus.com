@@ -4,9 +4,9 @@
 from os import listdir
 from os.path import join, isdir, abspath
 files = []
-nombreArchivo = "archivos.txt"
+nombreArchivo = "nuevos-archivos.txt"
 # Ruta donde estan los textos en su respectivo sistema de carpetas
-pathTextos = abspath("../textos")
+pathTextos = abspath("../nuevos-textos")
 a = listdir(pathTextos)
 for b in a:
     if isdir(join(pathTextos, b)):

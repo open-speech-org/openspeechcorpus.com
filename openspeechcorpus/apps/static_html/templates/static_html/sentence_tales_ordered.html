@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+    <table>
+        <thead>
+            <tr>
+                <th>
+                    {% trans 'Sentence Tale' %}
+                </th>
+                <th>
+                    {% trans 'Count' %}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for element in count %}
+                <tr>
+                    <td>
+                        {{ element.tale_sentence.id }} - {{ element.tale_sentence.tale }} - {{  element.tale_sentence.text }}
+                    </td>
+                    <td>
+                        {{ element.count }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
