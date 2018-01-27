@@ -16,22 +16,16 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from openspeechcorpus.apps.static_html import urls as static_html_urls
-from openspeechcorpus.apps.authentication import urls as authentication_urls
-from openspeechcorpus.apps.mobile_api import urls as mobile_api_urls
-from openspeechcorpus.apps.recordings import urls as recordings_urls
-from openspeechcorpus.apps.user_profile import urls as user_profiles_urls
-from openspeechcorpus.apps.webapp import urls as webapp_urls
 from . import settings
 
 urlpatterns = [
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include(static_html_urls)),
-    url(r'^auth/', include(authentication_urls)),
-    url(r'^api/', include(mobile_api_urls)),
-    url(r'^recordings/', include(recordings_urls)),
-    url(r'^contributors/', include(user_profiles_urls)),
-    url(r'^webapp/', include(webapp_urls, namespace='webapp')),
+        url(r'^admin/', include(admin.site.urls)),
+    url(r'^', include('applications.static_html.urls')),
+    url(r'^auth/', include('applications.authentication.urls')),
+    url(r'^api/', include('applications.mobile_api.urls')),
+    url(r'^recordings/', include('applications.recordings.urls')),
+    url(r'^contributors/', include('applications.user_profile.urls')),
+    url(r'^webapp/', include('applications.webapp', namespace='webapp')),
 
 
     # Media URL

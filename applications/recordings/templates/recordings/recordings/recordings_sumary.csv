@@ -1,0 +1,2 @@
+id,text,user,length,validated{% for record in recordings %}
+{{record.audio.audiofile}},"{{record.audio.text}}",{{record.user.anonymous_name}},{{record.audio.length}},{{record.audio.verified}}{% endfor %}

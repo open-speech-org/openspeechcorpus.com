@@ -40,17 +40,17 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 
     # Project Apps
-    'openspeechcorpus.apps.static_html',
-    'openspeechcorpus.apps.core',
-    'openspeechcorpus.apps.authentication',
-    'openspeechcorpus.apps.tales',
-    'openspeechcorpus.apps.mobile_api',
-    'openspeechcorpus.apps.recordings',
-    'openspeechcorpus.apps.suggestions',
-    'openspeechcorpus.apps.user_profile',
-    'openspeechcorpus.apps.news',
-    'openspeechcorpus.apps.miscellany',
-    'openspeechcorpus.apps.webapp',
+    'applications.static_html',
+    'applications.core',
+    'applications.authentication',
+    'applications.tales',
+    'applications.mobile_api',
+    'applications.recordings',
+    'applications.suggestions',
+    'applications.user_profile',
+    'applications.news',
+    'applications.miscellany',
+    'applications.webapp',
 
 
     # Third party Apps
