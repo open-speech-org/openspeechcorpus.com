@@ -20,8 +20,8 @@ class Migration(migrations.Migration):
                 ('timestamp', models.DateTimeField(auto_now=True)),
                 ('original_text', models.TextField()),
                 ('correct_text', models.TextField()),
-                ('audio_data', models.ForeignKey(to='core.AudioData')),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('audio_data', models.ForeignKey(to='core.AudioData', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
         ),
     ]

@@ -6,7 +6,7 @@ from django.db import models
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.core import paginator
 from django.utils.datetime_safe import datetime
 from django.utils import timezone
@@ -17,6 +17,7 @@ from applications.authentication import models as authentication_models
 from applications.tales import models as tales_models
 
 # Create your views here.
+
 
 class Index(generic.TemplateView):
     template_name = 'static_html/index.html'
@@ -102,9 +103,9 @@ class Rate(generic.UpdateView):
     def form_valid(self, form):
         context = self.get_context_data()
         audio_data = form.save(commit=False)
-        print form.cleaned_data['text']
-        print context['audio_data'].text
-        print audio_data.text
+        print(form.cleaned_data['text'])
+        print(context['audio_data'].text)
+        print(audio_data.text)
         verification_history = core_models.VerificationHistory(
             audio_data=audio_data,
             user=self.request.user,
@@ -164,9 +165,9 @@ class CountSentenceTales(generic.TemplateView):
         ).order_by('-count')[:100]
 
         for s in sentence_tales:
-            print s['tale_sentence']
+            print(s['tale_sentence'])
             s['tale_sentence'] = tales_models.TaleSentence.objects.get(pk=s['tale_sentence'])
-            print s['tale_sentence']
+            print(s['tale_sentence'])
         context['count'] = sentence_tales
 
         return context

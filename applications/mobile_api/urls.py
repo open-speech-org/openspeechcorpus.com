@@ -69,11 +69,11 @@ urlpatterns = [
     ),
     url(
         r'^news/',
-        include(news_api_urls, namespace="news_api")
+        include(news_api_urls)
     ),
     url(
         r'^commands/',
-        include(miscellany_api_urls, namespace="miscellany_api")
+        include(miscellany_api_urls)
     ),
     url(
         r'ranking/',

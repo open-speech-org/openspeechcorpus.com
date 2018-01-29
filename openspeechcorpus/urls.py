@@ -13,25 +13,26 @@ Including another URLconf
     1. Add an import:  from blog import urls as blog_urls
     2. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import include, url
+from django.urls import include, path
 from django.contrib import admin
+from django.views.static import serve as django_static_serve
 
 from . import settings
 
 urlpatterns = [
-        url(r'^admin/', include(admin.site.urls)),
-    url(r'^', include('applications.static_html.urls')),
-    url(r'^auth/', include('applications.authentication.urls')),
-    url(r'^api/', include('applications.mobile_api.urls')),
-    url(r'^recordings/', include('applications.recordings.urls')),
-    url(r'^contributors/', include('applications.user_profile.urls')),
-    url(r'^webapp/', include('applications.webapp', namespace='webapp')),
+    path('admin/', admin.site.urls),
+    path('', include('applications.static_html.urls')),
+    path('auth/', include('applications.authentication.urls')),
+    path('api/', include('applications.mobile_api.urls')),
+    path('recordings/', include('applications.recordings.urls')),
+    path('contributors/', include('applications.user_profile.urls')),
+    path('webapp/', include('applications.webapp.urls')),
 
 
     # Media URL
-    url(
-        r'^media/(?P<path>.*)$',
-        'django.views.static.serve',
+    path(
+        '^media/(?P<path>.*)$',
+        django_static_serve,
         {
             'document_root': settings.MEDIA_ROOT
         }

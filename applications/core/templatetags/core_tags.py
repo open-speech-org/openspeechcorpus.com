@@ -1,5 +1,5 @@
 from django import template
-from openspeechcorpus.apps.core import utils as core_utils
+from applications.core import utils as core_utils
 register = template.Library()
 
 @register.filter(name="audio_length")

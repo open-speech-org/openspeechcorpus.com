@@ -29,23 +29,27 @@ class TalesSentencesView(APIView):
         sentences = tales_models.TaleSentence.objects.all()[offset:offset+10]
         sentences_serialized = tales_serializers.TaleSentenceSerializer(data=sentences, many=True)
         sentences_serialized.is_valid()
-        print sentences_serialized.data
+        print(sentences_serialized.data)
 
         if request.query_params.get('new_user', False):
-            print "New user requested"
+            print("New user requested")
             anonymous_user = authentication_models.AnonymousUserProfile(
-                anonymous_name='anonymous_'+unicode(authentication_models.AnonymousUserProfile.objects.all().count())
+                anonymous_name='anonymous_{}'.format(
+                    str(authentication_models.AnonymousUserProfile.objects.all().count()
+                        )
+                )
             )
             anonymous_user.save()
-            print anonymous_user
+            print(anonymous_user)
             anonymous_user_sentence_serialized = mobile_api_serializer.AnonymousUserSentenceSerializer(
                 data={
                     'anonymous_user': anonymous_user.id,
                     'sentences': sentences_serialized.data
                 }
             )
-            print anonymous_user_sentence_serialized.is_valid()
-            print anonymous_user_sentence_serialized.data
+            print(anonymous_user_sentence_serialized.is_valid())
+
+            print(anonymous_user_sentence_serialized.data)
             return Response(anonymous_user_sentence_serialized.data)
         else:
 
@@ -54,7 +58,7 @@ class TalesSentencesView(APIView):
 
 class UploadTaleSetenceView(APIView):
     def post(self, request, format=None):
-        print request.data
+        print(request.data)
         audio_upload_tale_data = mobile_api_serializer.AudioTaleSentenceUploadSerializer(data=request.data)
 
         if audio_upload_tale_data.is_valid(True):
@@ -141,7 +145,7 @@ class UpdateAnonymousUserProfile(APIView):
 class UploadCustomAudio(APIView):
 
     def post(self,request, format=None):
-        print request.data
+        print(request.data)
         audio_serializer = core_serializers.AudioDataSerializer(data=request.data)
         if audio_serializer.is_valid(True):
             audio_data = audio_serializer.save()
@@ -282,7 +286,7 @@ class VoteTale(APIView):
     def post(self, request, format=None):
         serializer = tales_serializers.TaleVoteSerializer(data=request.data)
         if serializer.is_valid(True):
-            print serializer.validated_data
+            print(serializer.validated_data)
             tale = serializer.validated_data['tale']
             tale.calification = (tale.calification * tale.total_votes + serializer.validated_data['calification'])/\
                                 (tale.total_votes+1)
@@ -309,7 +313,7 @@ class VoteTale(APIView):
 class GetRandomSentence(APIView):
 
     def get(self, request, format=None):
-        print tales_models.TaleSentence.objects.count()
+        print(tales_models.TaleSentence.objects.count())
         random_tale = random.random()*tales_models.Tale.objects.count()
         tale_sentences = tales_models.TaleSentence.objects.filter(tale__id=random_tale)
         random_sentence_id = tale_sentences[0].id
@@ -321,8 +325,8 @@ class GetRandomSentence(APIView):
 class GetNextSentence(APIView):
 
     def get(self, request, format=None):
-        print tales_models.TaleSentence.objects.count()
-        print request.query_params
+        print(tales_models.TaleSentence.objects.count())
+        print(request.query_params)
         random_tale = random.random()*tales_models.Tale.objects.count()
         tale_sentences = tales_models.TaleSentence.objects.filter(tale__id=random_tale)
         random_sentence_id = tale_sentences[0].id
@@ -356,7 +360,7 @@ class DownloadMostReadedTales(APIView):
         ).order_by('-count')[:offset]
 
         audio_datas = []
-        print sentence_tales
+        print(sentence_tales)
         for s in sentence_tales:
             speech_tales = tales_models.SentenceTaleSpeech.objects.filter(tale_sentence__id=s['tale_sentence'])
             for a in speech_tales:

@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
             name='AnonymousAudioData',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('audio', models.ForeignKey(to='core.AudioData')),
-                ('user', models.ForeignKey(to='authentication.AnonymousUserProfile')),
+                ('audio', models.ForeignKey(to='core.AudioData', on_delete=models.CASCADE)),
+                ('user', models.ForeignKey(to='authentication.AnonymousUserProfile', on_delete=models.CASCADE)),
             ],
         ),
     ]

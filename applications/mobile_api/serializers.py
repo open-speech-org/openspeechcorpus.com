@@ -10,10 +10,10 @@ from applications.core import serializers as core_serializer
 from applications.authentication import models as authentication_models
 
 
-
 class AnonymousUserSentenceSerializer(serializers.Serializer):
     anonymous_user = serializers.IntegerField()
     sentences = tales_serializers.TaleSentenceSerializer()
+
 
 class AnonymousUserCustomAudioSerializer(serializers.Serializer):
     anonymous_user = serializers.IntegerField()
@@ -33,11 +33,11 @@ class AudioTaleSentenceUploadSerializer(serializers.Serializer):
             raise serializers.ValidationError(_('Audio data is not defined'))
         try:
             tale_sentence = tales_models.TaleSentence.objects.get(pk=tale_sentence_id)
-            name = tale_sentence.tale.title + " " + unicode(tale_sentence.place)
+            name = tale_sentence.tale.title + " " + str(tale_sentence.place)
             element_count = core_models.AudioData.objects.filter(name__icontains=name).count()
             audio_data = core_models.AudioData(
                 name=name,
-                slug=slugify(name+" "+unicode(element_count)),
+                slug=slugify("{} {}".format(name, str(element_count))),
                 text=tale_sentence.text,
                 audiofile=audio_file
             )
@@ -50,8 +50,8 @@ class AudioTaleSentenceUploadSerializer(serializers.Serializer):
             tale_sentence_speech.save()
             anonymous_id = validated_data.get('anonymous_user', False)
             if anonymous_id:
-                print anonymous_id
-                print "Exists"
+                print(anonymous_id)
+                print("Exists")
                 try:
                     anonymous_profile = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_id)
                     anonymous_audio_data = core_models.AnonymousAudioData(
@@ -59,7 +59,7 @@ class AudioTaleSentenceUploadSerializer(serializers.Serializer):
                         user=anonymous_profile
                     )
                     anonymous_audio_data.save()
-                    print anonymous_audio_data
+                    print(anonymous_audio_data)
                 except authentication_models.AnonymousUserProfile.DoesNotExist:
                     print("Anonymous does not exists")
 

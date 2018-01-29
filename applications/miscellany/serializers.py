@@ -17,9 +17,11 @@ class CommandSerializer(serializers.ModelSerializer):
             'text',
         )
 
+
 class AnonymousCommandSerializer(serializers.Serializer):
     anonymous_user = serializers.IntegerField()
     commands = CommandSerializer()
+
 
 class CommandUploadSerializer(serializers.Serializer):
     anonymous_user = serializers.IntegerField(required=False)
@@ -38,7 +40,7 @@ class CommandUploadSerializer(serializers.Serializer):
             element_count = core_models.AudioData.objects.filter(name__icontains=name).count()
             audio_data = core_models.AudioData(
                 name=name,
-                slug=slugify(name+" "+unicode(element_count)),
+                slug=slugify("{} {}".format(name, str(element_count))),
                 text=command.text,
                 audiofile=audio_file
             )
@@ -51,8 +53,8 @@ class CommandUploadSerializer(serializers.Serializer):
             command_speech.save()
             anonymous_id = validated_data.get('anonymous_user', False)
             if anonymous_id:
-                print anonymous_id
-                print "Exists"
+                print(anonymous_id)
+                print("Exists")
                 try:
                     anonymous_profile = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_id)
                     anonymous_audio_data = core_models.AnonymousAudioData(
@@ -60,7 +62,7 @@ class CommandUploadSerializer(serializers.Serializer):
                         user=anonymous_profile
                     )
                     anonymous_audio_data.save()
-                    print anonymous_audio_data
+                    print(anonymous_audio_data)
                 except authentication_models.AnonymousUserProfile.DoesNotExist:
                     print("Anonymous does not exists")
             else:

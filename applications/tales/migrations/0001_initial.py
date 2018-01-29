@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
             name='SentenceTaleSpeech',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('audio', models.ForeignKey(to='core.AudioData')),
+                ('audio', models.ForeignKey(to='core.AudioData', on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(
@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('title', models.CharField(max_length=200)),
                 ('description', models.TextField()),
-                ('author', models.ForeignKey(to='tales.Author')),
+                ('author', models.ForeignKey(to='tales.Author', on_delete=models.CASCADE)),
             ],
         ),
         migrations.CreateModel(
@@ -53,13 +53,13 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('place', models.IntegerField(null=True, blank=True)),
                 ('text', models.TextField()),
-                ('tale', models.ForeignKey(to='tales.Tale')),
+                ('tale', models.ForeignKey(to='tales.Tale', on_delete=models.CASCADE)),
             ],
         ),
         migrations.AddField(
             model_name='sentencetalespeech',
             name='tale_sentence',
-            field=models.ForeignKey(to='tales.TaleSentence'),
+            field=models.ForeignKey(to='tales.TaleSentence', on_delete=models.CASCADE),
         ),
         migrations.AddField(
             model_name='author',

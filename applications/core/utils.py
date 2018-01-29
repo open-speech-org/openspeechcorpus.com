@@ -34,19 +34,21 @@ utils.extractLengthOfAudioData(b)
         print("0")
         return 0
 
+
 def human_readable_length(length):
     """
 from openspeechcorpus.apps.core import utils
 utils.humanReadableLength(3663)
     """
-    print length
+    print(length)
     hours = int(length/3600)
-    print hours
+    print(hours)
     minutes = int((length - 3600*hours)/60)
-    print minutes
+    print(minutes)
     seconds = (length - 3600*hours - 60*minutes)
-    print seconds
+    print(seconds)
     return str(hours) + ":" + str(minutes) + ":" + str(seconds)
+
 
 def fill_empty_audiodata_length():
     """

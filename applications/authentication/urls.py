@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 from django.conf.urls import url
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
+from django.contrib.auth import views as auth_views
+
 from . import views
 
 urlpatterns = [
     # Log in
     url(
         r'log-in/$',
-        'django.contrib.auth.views.login',
+        auth_views.login,
         {
             'template_name': 'authentication/log-in.html',
         },
@@ -16,7 +18,7 @@ urlpatterns = [
 
     url(
         r'log-out/$',
-        'django.contrib.auth.views.logout',
+        auth_views.logout,
         {
             'next_page': '/'
         },
@@ -38,7 +40,7 @@ urlpatterns = [
     # Change Password
     url(
         r'change-password/$',
-        'django.contrib.auth.views.password_change',
+        auth_views.password_change,
         {
             'template_name': 'authentication/change-password.html',
         },
@@ -46,7 +48,7 @@ urlpatterns = [
     ),
     url(
         r'change-password-done/$',
-        'django.contrib.auth.views.password_change_done',
+        auth_views.password_change_done,
         {
             'template_name': 'authentication/change-password-success.html',
             },
@@ -56,7 +58,7 @@ urlpatterns = [
     # Password Recovery
     url(
         r'recover-password/$',
-        'django.contrib.auth.views.password_reset',
+        auth_views.password_reset,
         {
             'template_name': 'autenticacion/recover-password.html',
             'email_template_name': 'authentication/email-restore-password.html',
@@ -66,7 +68,7 @@ urlpatterns = [
     ),
     url(
         r'recover-password-done/$',
-        'django.contrib.auth.views.password_reset_done',
+        auth_views.password_reset_done,
         {
             'template_name': 'authentication/recover-password-success.html',
             },
@@ -76,14 +78,14 @@ urlpatterns = [
 
     url(
         r'reset-password/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-        'django.contrib.auth.views.password_reset_confirm',
+        auth_views.password_reset_confirm,
         {
             'template_name': 'authentication/reset-password.html',
         },
         name='password_reset_confirm'),
     url(
         r'reset-password-done/$',
-        'django.contrib.auth.views.password_reset_complete',
+        auth_views.password_reset_complete,
         {
             'template_name': 'authentication/change-password-success.html',
         },

@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now=True)),
                 ('frecuency', models.CharField(max_length=12, null=True, blank=True)),
                 ('channels', models.CharField(max_length=2, null=True, blank=True)),
-                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
             ],
         ),
     ]

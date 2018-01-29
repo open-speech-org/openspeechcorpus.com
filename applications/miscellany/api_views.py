@@ -17,23 +17,25 @@ class CommandsView(views.APIView):
         commands = miscellany_models.Command.objects.all()[offset:offset+10]
         commands_serializer = miscellany_serializers.CommandSerializer(commands, many=True)
 
-        print commands_serializer.data
+        print(commands_serializer.data)
 
         if request.query_params.get('new_user', False):
-            print "New user requested"
+            print("New user requested")
             anonymous_user = authentication_models.AnonymousUserProfile(
-                anonymous_name='anonymous_'+unicode(authentication_models.AnonymousUserProfile.objects.all().count())
+                anonymous_name='anonymous_{}'.format(
+                    str(authentication_models.AnonymousUserProfile.objects.all().count())
+                )
             )
             anonymous_user.save()
-            print anonymous_user
+            print(anonymous_user)
             anonymous_user_command_serialized = miscellany_serializers.AnonymousCommandSerializer(
                 data={
                     'anonymous_user': anonymous_user.id,
                     'commands': commands_serializer.data
                 }
             )
-            print anonymous_user_command_serialized.is_valid()
-            print anonymous_user_command_serialized.data
+            print(anonymous_user_command_serialized.is_valid())
+            print(anonymous_user_command_serialized.data)
             return response.Response(anonymous_user_command_serialized.data)
         else:
 
@@ -43,7 +45,7 @@ class UploadCommand(views.APIView):
 
     def post(self, request, format=None):
 
-        print request.data
+        print(request.data)
         audio_upload_tale_data = miscellany_serializers.CommandUploadSerializer(data=request.data)
 
         if audio_upload_tale_data.is_valid(True):

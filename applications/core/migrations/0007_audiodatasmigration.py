@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('timestamp', models.DateTimeField(auto_now_add=True)),
-                ('new_user', models.ForeignKey(related_name='new_user', to='core.AnonymousAudioData')),
-                ('old_user', models.ForeignKey(related_name='old_user', to='core.AnonymousAudioData')),
+                ('new_user', models.ForeignKey(related_name='new_user', to='core.AnonymousAudioData', on_delete=models.CASCADE)),
+                ('old_user', models.ForeignKey(related_name='old_user', to='core.AnonymousAudioData', on_delete=models.CASCADE)),
             ],
         ),
     ]

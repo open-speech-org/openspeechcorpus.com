@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('calification', models.DecimalField(max_digits=3, decimal_places=2)),
                 ('opinion', models.TextField(null=True, blank=True)),
-                ('anonymous_user', models.ForeignKey(to='authentication.AnonymousUserProfile')),
+                ('anonymous_user', models.ForeignKey(to='authentication.AnonymousUserProfile', on_delete=models.CASCADE)),
             ],
         ),
         migrations.AddField(
@@ -34,6 +34,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='talevote',
             name='tale',
-            field=models.ForeignKey(to='tales.Tale'),
+            field=models.ForeignKey(to='tales.Tale', on_delete=models.CASCADE),
         ),
     ]

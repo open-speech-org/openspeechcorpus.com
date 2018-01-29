@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='anonymoususerprofilehistory',
             name='anonymous_user_profile',
-            field=models.ForeignKey(to='authentication.AnonymousUserProfile'),
+            field=models.ForeignKey(to='authentication.AnonymousUserProfile', on_delete=models.CASCADE),
         ),
     ]

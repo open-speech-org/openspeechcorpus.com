@@ -26,7 +26,7 @@ SECRET_KEY = '^++51d6&viy&)$i_ky)d+8-h5qd$_+qqu8)&#!d@rr2kc*j8)q'
 DEBUG = True
 PRODUCTION = False
 
-ALLOWED_HOSTS = ["openspeechcorpus.com",]
+ALLOWED_HOSTS = ["openspeechcorpus.com", "localhost"]
 
 
 # Application definition

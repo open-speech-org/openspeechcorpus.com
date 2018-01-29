@@ -14,11 +14,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='audiodatasmigration',
             name='new_user',
-            field=models.ForeignKey(related_name='new_user', to='authentication.AnonymousUserProfile'),
+            field=models.ForeignKey(related_name='new_user', to='authentication.AnonymousUserProfile', on_delete=models.CASCADE),
         ),
         migrations.AlterField(
             model_name='audiodatasmigration',
             name='old_user',
-            field=models.ForeignKey(related_name='old_user', to='authentication.AnonymousUserProfile'),
+            field=models.ForeignKey(related_name='old_user', to='authentication.AnonymousUserProfile', on_delete=models.CASCADE),
         ),
     ]
