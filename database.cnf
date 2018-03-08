@@ -3,5 +3,5 @@ database = openspeechcorpus
 user = ops_user
 password = 0P3NSP33ch_C0rpus
 default-character-set = utf8
-host = 159.203.95.243
+host = db.contraslash.com
 port = 3306

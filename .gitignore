@@ -2,3 +2,6 @@
 audio-data
 media
 *.pyc
+
+prod_env_vars.sh
+drone_secret_config.sh
