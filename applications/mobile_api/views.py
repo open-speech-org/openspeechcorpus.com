@@ -35,8 +35,9 @@ class TalesSentencesView(APIView):
             print("New user requested")
             anonymous_user = authentication_models.AnonymousUserProfile(
                 anonymous_name='anonymous_{}'.format(
-                    str(authentication_models.AnonymousUserProfile.objects.all().count()
-                        )
+                    str(
+                        authentication_models.AnonymousUserProfile.objects.all().count()
+                    )
                 )
             )
             anonymous_user.save()
@@ -57,6 +58,7 @@ class TalesSentencesView(APIView):
 
 
 class UploadTaleSetenceView(APIView):
+
     def post(self, request, format=None):
         print(request.data)
         audio_upload_tale_data = mobile_api_serializer.AudioTaleSentenceUploadSerializer(data=request.data)
@@ -79,6 +81,7 @@ class UploadTaleSetenceView(APIView):
                 }
             )
 
+
 class RegisterSuggestion(APIView):
 
     def post(self, request, format=None):
@@ -95,6 +98,7 @@ class RegisterSuggestion(APIView):
                     'error': 1
                 }
             )
+
 
 class UpdateAnonymousUserProfile(APIView):
 
@@ -141,7 +145,6 @@ class UpdateAnonymousUserProfile(APIView):
             )
 
 
-
 class UploadCustomAudio(APIView):
 
     def post(self,request, format=None):
@@ -180,6 +183,7 @@ class UploadCustomAudio(APIView):
                 }
             )
 
+
 class GetTales(APIView):
 
     def get(self, request, format=None):
@@ -203,7 +207,6 @@ class GetTales(APIView):
         #     )
 
 
-
 class GetAuthors(APIView):
 
     def get(self, request, format=None):
@@ -218,10 +221,11 @@ class GetAuthors(APIView):
             }
         )
 
+
 class GetTalesOfAuthor(APIView):
 
     def get(self, request, *args, **kwargs):
-        author_id =  self.kwargs.get("author_id", None)
+        author_id = self.kwargs.get("author_id", None)
         if author_id is not None:
             try:
                 author = tales_models.Author.objects.get(pk=author_id)
@@ -249,11 +253,12 @@ class GetTalesOfAuthor(APIView):
                 }
             )
 
+
 class GetSentencesOfTale(APIView):
 
     def get(self, request, *args, **kwargs):
 
-        tale_id =  self.kwargs.get("tale_id", None)
+        tale_id = self.kwargs.get("tale_id", None)
         if tale_id is not None:
             try:
                 tale = tales_models.Tale.objects.get(pk=tale_id)
@@ -280,6 +285,7 @@ class GetSentencesOfTale(APIView):
                     'error': 1
                 }
             )
+
 
 class VoteTale(APIView):
 
@@ -322,16 +328,21 @@ class GetRandomSentence(APIView):
 
         return Response(serializer.data)
 
+
 class GetNextSentence(APIView):
 
     def get(self, request, format=None):
         print(tales_models.TaleSentence.objects.count())
         print(request.query_params)
-        random_tale = random.random()*tales_models.Tale.objects.count()
-        tale_sentences = tales_models.TaleSentence.objects.filter(tale__id=random_tale)
-        random_sentence_id = tale_sentences[0].id
+        all_tales = tales_models.Tale.objects.all()
+        random_tale = int(random.random() * tales_models.Tale.objects.all().count())
+        tale_sentences = tales_models.TaleSentence.objects.filter(tale=all_tales[random_tale])
+        if tale_sentences.count() > 0:
+            random_sentence_id = tale_sentences[0].id
+        else:
+            random_sentence_id = 0
         sentence = tales_models.TaleSentence.objects.get(
-            pk=(int)(request.query_params.get(
+            pk=int(request.query_params.get(
                 'id',
                 random_sentence_id
             ))+1
@@ -339,6 +350,7 @@ class GetNextSentence(APIView):
         serializer = tales_serializers.TaleSentenceSerializer(sentence)
 
         return Response(serializer.data)
+
 
 class RankingTable(APIView):
 
@@ -350,6 +362,7 @@ class RankingTable(APIView):
             count_data['user'] = authentication_models.AnonymousUserProfile.objects.get(pk=count_data['user']).anonymous_name
         print(count_datas)
         return Response(count_datas)
+
 
 class DownloadMostReadedTales(APIView):
 

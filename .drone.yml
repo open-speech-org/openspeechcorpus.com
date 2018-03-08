@@ -1,0 +1,40 @@
+clone:
+  git:
+    image: plugins/git
+    recursive: true
+    clone_mode: oauth
+    skip_verify: true
+    environment:
+      - DRONE_NETRC_MACHINE=git.contraslash.com
+      - DRONE_NETRC_USERNAME=fb452397e035ea570795dcd0ab18423bf4306381
+      - DRONE_NETRC_PASSWORD=x-oauth-basic
+
+pipeline:
+  compile:
+      image: plugins/docker
+      repo: registry.contraslash.com:5000/contraslash/openspeechcorpus
+      secrets: [ docker_username, docker_password ]
+      registry: registry.contraslash.com:5000
+      tags: [0.1, latest]
+
+  deploy:
+    image: appleboy/drone-ssh
+    username: root
+    secrets: [ ssh_key, docker_username, docker_password, mysql_database, mysql_username, mysql_password, aws_storage_bucket_name, aws_access_key_id, aws_secret_access_key ]
+    envs: [docker_username, docker_password, mysql_database, mysql_username, mysql_password, aws_storage_bucket_name, aws_access_key_id, aws_secret_access_key]
+    host: albacora.contraslash.com
+    port: 22
+    script:
+      - echo "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD registry.contraslash.com:5000"
+      - env
+      - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD registry.contraslash.com:5000
+      - docker pull registry.contraslash.com:5000/contraslash/conquismaranathacali
+      - docker service rm conquismaranathacali
+      - docker service create --name openspeechcorpus --label traefik.port=8000 --label traefik.frontend.rule=Host:openspeechcorpus.contraslash.com --network traefik-network --env ENV=PRODUCTION --env MYSQL_DATABASE=openspeechcorpus --env MYSQL_USERNAME=$MYSQL_USERNAME --env MYSQL_PASSWORD=$MYSQL_PASSWORD --env AWS_STORAGE_BUCKET_NAME=$AWS_STORAGE_BUCKET_NAME --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY registry.contraslash.com:5000/contraslash/openspeechcorpus
+
+  slack:
+    image: plugins/slack
+    webhook: https://hooks.slack.com/services/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
+    channel: devops
+    when:
+     status: [ success, failure ]

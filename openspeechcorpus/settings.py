@@ -23,10 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '^++51d6&viy&)$i_ky)d+8-h5qd$_+qqu8)&#!d@rr2kc*j8)q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-PRODUCTION = False
+DEBUG = os.environ.get('DEBUG', "False") == "True"
+ENV = os.environ.get('ENV', "DEVELOPMENT")
+# ENV = os.environ.get('ENV', "PRODUCTION")
 
-ALLOWED_HOSTS = ["openspeechcorpus.com", "localhost"]
+ALLOWED_HOSTS = [
+    "openspeechcorpus.com",
+    "localhost",
+    "openspeechcorpus.contraslash.com"
+]
 
 
 # Application definition
@@ -57,12 +62,12 @@ INSTALLED_APPS = (
     'rest_framework',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    # 'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -101,18 +106,6 @@ DATABASES = {
     }
 }
 
-if PRODUCTION:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'OPTIONS': {
-                'read_default_file': os.path.join(BASE_DIR,  'database.cnf'),
-            },
-        }
-    }
-
-
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
@@ -133,15 +126,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
-)
+]
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static_dist")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static_dist")
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'ma0@contraslash.com'
-EMAIL_HOST_PASSWORD = 'Sumao58001994@'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'ma0@contraslash.com'
@@ -157,7 +150,9 @@ REST_FRAMEWORK = {
 
 # Media conf
 MEDIA_ROOT = os.path.join(BASE_DIR,  'media')
-if PRODUCTION:
-    MEDIA_ROOT = '/var/www/html/openspeechcorpus.com/media'
+
+if ENV == "PRODUCTION":
+    from openspeechcorpus.settings_prod import *
+
 
 MEDIA_URL = '/media/'

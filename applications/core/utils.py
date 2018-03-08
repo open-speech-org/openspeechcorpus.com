@@ -3,6 +3,7 @@ import subprocess
 
 from applications.core import models as core_models
 
+
 def extract_length_of_audio_data(audio_data):
     """
 from openspeechcorpus.apps.core import utils
@@ -24,12 +25,12 @@ utils.extractLengthOfAudioData(b)
                 values = line.split(",")[0].split("Duration:")[1].split(":")
                 duration = 3600 * float(values[0]) + 60 * float(values[1]) + float(values[2])
                 ffprobe_out.stdout.close()
-                ffprobe_out.pipe_cloexec()
+                # ffprobe_out.pipe_cloexec()
                 ffprobe_out.wait()
                 print(duration)
                 return duration
         ffprobe_out.stdout.close()
-        ffprobe_out.pipe_cloexec()
+        # ffprobe_out.pipe_cloexec()
     except IOError:
         print("0")
         return 0
@@ -63,6 +64,7 @@ audiodatas.count()
         audiodata.length = extract_length_of_audio_data(audiodata)
         audiodata.save()
 
+
 def get_total_audio_recorder():
     """
 from openspeechcorpus.apps.core import utils
@@ -88,6 +90,7 @@ utils.get_total_audios_from_user(12312)
         total_audio += audiodata.audio.length
     return human_readable_length(total_audio)
 
+
 def migrate_records_from_user_to_new_user(old_user_id, new_user_id):
     """
 from openspeechcorpus.apps.core import utils
@@ -110,7 +113,8 @@ utils.migrate_records_from_user_to_new_user(6,11)
     except core_models.AnonymousUserProfile.DoesNotExist:
         return False
 
-def assign_orphan_audio_to_user(first_id,anonymous_user_id):
+
+def assign_orphan_audio_to_user(first_id, anonymous_user_id):
     """
 from openspeechcorpus.apps.core import utils
 utils.assign_orphan_audio_to_user()
@@ -129,8 +133,3 @@ utils.assign_orphan_audio_to_user()
     user = core_models.AnonymousUserProfile.objects.get(pk=anonymous_user_id)
     for orphan_audio in orphan_audios:
         core_models.AnonymousAudioData.objects.create(audio=orphan_audio, user=user)
-
-
-
-
-

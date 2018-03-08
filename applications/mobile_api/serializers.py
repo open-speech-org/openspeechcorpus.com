@@ -35,9 +35,12 @@ class AudioTaleSentenceUploadSerializer(serializers.Serializer):
             tale_sentence = tales_models.TaleSentence.objects.get(pk=tale_sentence_id)
             name = tale_sentence.tale.title + " " + str(tale_sentence.place)
             element_count = core_models.AudioData.objects.filter(name__icontains=name).count()
+            slug = slugify("{} {}".format(name[40:], str(element_count)))
+            print(slug)
+            print(len(slug))
             audio_data = core_models.AudioData(
                 name=name,
-                slug=slugify("{} {}".format(name, str(element_count))),
+                slug=slug,
                 text=tale_sentence.text,
                 audiofile=audio_file
             )

@@ -6,6 +6,8 @@ from applications.tales import models as tales_models
 from applications.core import models as core_models
 
 # Create your views here.
+
+
 class RecordingsList(generic.ListView):
     template_name = "recordings/recordings/recordings_list.html"
     context_object_name = "recordings"
@@ -20,7 +22,7 @@ class RecordingsList(generic.ListView):
             recordings = pager.page(page)
 
             start_index = max(1, recordings.number-3)
-            end_index = min(recordings.number+3, (len(context['recordings'])/recordings_by_page)+1)
+            end_index = min(recordings.number+3, (len(context['recordings'])//recordings_by_page)+1)
             print(start_index, end_index, len(context['recordings']))
             context['range'] = range(start_index, end_index+1)
             context['recordings'] = recordings

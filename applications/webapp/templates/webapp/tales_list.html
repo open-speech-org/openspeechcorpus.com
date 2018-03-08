@@ -4,7 +4,7 @@
     {% for tale in tales %}
         <div class="card">
             <div class="card-title black-text">
-                <a href="{% url 'webapp:app' tale.id %}">
+                <a href="{% url 'app' tale.id %}">
                     {{ tale }}
                 </a>
             </div>
