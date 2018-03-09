@@ -28,8 +28,8 @@ pipeline:
       - echo "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD registry.contraslash.com:5000"
       - env
       - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD registry.contraslash.com:5000
-      - docker pull registry.contraslash.com:5000/contraslash/conquismaranathacali
-      - docker service rm conquismaranathacali
+      - docker pull registry.contraslash.com:5000/contraslash/openspeechcorpus
+      - docker service rm openspeechcorpus
       - docker service create --name openspeechcorpus --label traefik.port=8000 --label traefik.frontend.rule=Host:openspeechcorpus.contraslash.com --network traefik-network --env ENV=PRODUCTION --env MYSQL_DATABASE=openspeechcorpus --env MYSQL_USERNAME=$MYSQL_USERNAME --env MYSQL_PASSWORD=$MYSQL_PASSWORD --env AWS_STORAGE_BUCKET_NAME=$AWS_STORAGE_BUCKET_NAME --env AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID --env AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY registry.contraslash.com:5000/contraslash/openspeechcorpus
 
   slack:

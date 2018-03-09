@@ -33,6 +33,7 @@ class RecordingsList(generic.ListView):
 
         return context
 
+
 class RecordingDetail(generic.DetailView):
     model = core_models.AudioData
     context_object_name = "recording"
@@ -49,6 +50,7 @@ class RecordingDetail(generic.DetailView):
             pass
 
         return context
+
 
 class RecordingsSumary(generic.ListView):
     template_name = "recordings/recordings/recordings_sumary.csv"

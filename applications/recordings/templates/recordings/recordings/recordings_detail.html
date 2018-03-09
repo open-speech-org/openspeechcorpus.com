@@ -33,7 +33,12 @@
         <div class="row">
             <div class="col s12">
                 <audio controls>
-                    <source src="/media/{{ recording.audiofile }}">
+                    {% if recording.id < 23006 %}
+                        <source src="https://s3.amazonaws.com/contraslash/openspeechcorpus/media/{{ recording.audiofile }}">
+                    {% else %}
+                        true
+                        <source src="https://s3.amazonaws.com/contraslash/openspeechcorpus/media/audio-data/v2/{{ recording.id }}.wav">
+                    {% endif %}
                 </audio>
             </div>
 

@@ -41,7 +41,7 @@ class AnonymousUserProfile(models.Model):
     anonymous_picture = models.ImageField(upload_to='anonymous_pictures', blank=True, null=True)
 
     def __str__(self):
-        return str(self.id) + self.anonymous_name
+        return "{} {}".format(str(self.id), self.anonymous_name)
 
 
 class AnonymousUserProfileHistory(models.Model):
