@@ -36,8 +36,9 @@
                     {% if recording.id <= 23006 %}
                         <source src="https://s3.amazonaws.com/contraslash/openspeechcorpus/media/{{ recording.audiofile }}">
                     {% else %}
-                        true
-                        <source src="https://s3.amazonaws.com/contraslash/openspeechcorpus/media/audio-data/v2/{{ recording.id }}.wav">
+
+                        <source src="https://s3.amazonaws.com/contraslash/openspeechcorpus/media/audio-data/v2/{{ recording.id }}.wav" type="audio/wav">
+                        <source src="https://s3.amazonaws.com/contraslash/openspeechcorpus/media/audio-data/v2/{{ recording.id }}.mp4" type="audio/mpeg">
                     {% endif %}
                 </audio>
             </div>
