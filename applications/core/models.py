@@ -111,6 +111,8 @@ def upload_to_s3(instance):
     key = "{}/{}".format(settings.MEDIAFILES_LOCATION, "audio-data/v2/{}".format(instance.id))
     if "blob" in instance.audiofile.file.name:
         key += ".wav"
+    else:
+        key += ".mp4"
     s3.Bucket(settings.AWS_STORAGE_BUCKET_NAME).put_object(
         Key=key,
         Body=data
