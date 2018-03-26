@@ -1,0 +1,6 @@
+bicicleta
+carro
+automóvil
+tren
+avión
+taxi

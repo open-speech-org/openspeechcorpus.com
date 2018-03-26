@@ -56,6 +56,7 @@ INSTALLED_APPS = (
     'applications.news',
     'applications.miscellany',
     'applications.webapp',
+    'applications.aphasia',
 
 
     # Third party Apps

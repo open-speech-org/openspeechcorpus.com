@@ -1,0 +1,15 @@
+Acordeón
+Arpa
+Bajo
+Batería
+Campana
+Clave
+Flauta
+Guitarra
+Órgano
+Pandereta
+Piano
+Saxofón
+Tambor
+Trompeta
+Violín

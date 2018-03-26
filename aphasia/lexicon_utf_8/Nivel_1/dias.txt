@@ -1,0 +1,10 @@
+lunes
+martes
+miércoles
+jueves
+viernes
+sábado
+domingo
+mañana
+hoy
+ayer

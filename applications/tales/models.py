@@ -64,7 +64,3 @@ class SentenceTaleSpeech(models.Model):
 
     def __str__(self):
         return str(self.tale_sentence) + " " + str(self.audio)
-
-
-
-

@@ -3,7 +3,8 @@
 from os import listdir
 from os.path import isdir, join
 import codecs
-from openspeechcorpus.apps.tales import models as tales_models
+from applications.tales import models as tales_models
+
 
 def load_authors(file_path):
     a = listdir(file_path)
@@ -17,7 +18,7 @@ def load_authors(file_path):
                 title = humanizate(d)
                 tale = tales_models.Tale(title=title, author=author)
                 tale.save()
-                print title
+                print(title)
                 i = 1
                 tale_content = codecs.open(join(file_path, b, d), 'r', 'utf-8')
                 lines = tale_content.readlines()
@@ -29,7 +30,6 @@ def load_authors(file_path):
                     )
                     tale_sentence.save()
                     i += 1
-
 
 
 def humanizate(string):

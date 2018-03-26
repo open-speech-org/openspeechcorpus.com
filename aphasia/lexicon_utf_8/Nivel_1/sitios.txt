@@ -1,0 +1,15 @@
+parque
+piscina
+escuela
+colegio
+ciudad
+pueblo
+vereda
+finca
+lago
+estadio
+estación
+iglesia
+banco
+hospital
+oficina
