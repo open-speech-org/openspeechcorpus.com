@@ -1,6 +1,7 @@
 FROM contraslash/alpine-django-deploy-common-with-pillow
 # Those commands already are in finantic-base-build
 
+RUN apk update
 RUN apk add ffmpeg
 
 RUN mkdir /code
