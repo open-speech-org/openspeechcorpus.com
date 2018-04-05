@@ -33,3 +33,10 @@ AWS_MEDIA_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_S3_CUSTOM_DOMAIN
 STATICFILES_STORAGE = 'openspeechcorpus.storages.StaticStorage'
 STATICFILES_LOCATION = 'openspeechcorpus/static'
 STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+
+RAVEN_CONFIG = {
+    'dsn': 'http://6e200ac73dd9436097bc17bc2c19925c:23763430843049e58080be37a046a3e7@logging.contraslash.com/9',
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    # 'release': raven.fetch_git_sha(os.path.abspath(os.pardir)),
+}

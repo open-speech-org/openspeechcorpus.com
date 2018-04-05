@@ -62,6 +62,7 @@ INSTALLED_APPS = (
 
     # Third party Apps
     'rest_framework',
+    'raven.contrib.django.raven_compat',
 )
 
 MIDDLEWARE = (
