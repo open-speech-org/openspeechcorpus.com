@@ -58,13 +58,14 @@ class LevelSentenceSpeech(serializers.Serializer):
     audio = serializers.FileField()
 
     def create(self, validated_data):
-        tale_sentence_id = validated_data.get('tale_sentence_id', 0)
+        level_sentence_id = validated_data.get('level_sentence_id', 0)
         audio_file = validated_data.get('audio', None)
         if audio_file is None:
             raise serializers.ValidationError(_('Audio data is not defined'))
         try:
-            level_sentence = models.LevelSentence.objects.get(pk=tale_sentence_id)
-            name = level_sentence.title
+            print("Level Sentence ID", level_sentence_id)
+            level_sentence = models.LevelSentence.objects.get(pk=level_sentence_id)
+            name = level_sentence.text
             element_count = core_models.AudioData.objects.filter(name__icontains=name).count()
             slug = slugify("{} {}".format(name[:40], str(element_count)))
             print(slug)

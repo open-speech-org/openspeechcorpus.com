@@ -31,7 +31,7 @@ ALLOWED_HOSTS = [
     "openspeechcorpus.com",
     "localhost",
     "openspeechcorpus.contraslash.com",
-    "10.84.5.231"
+    "192.168.1.123"
 ]
 
 
