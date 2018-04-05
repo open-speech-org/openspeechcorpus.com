@@ -1,8 +1,20 @@
 from rest_framework import serializers
 
+from django.utils.text import slugify
+from django.utils.translation import ugettext_lazy as _
+
 from applications.core import serializers as core_serializer
 
 from . import models
+
+from applications.authentication import (
+    models as authentication_models
+)
+
+from applications.core import (
+    models as core_models
+)
+
 
 
 class Level(serializers.ModelSerializer):
@@ -39,14 +51,56 @@ class LevelSentence(serializers.ModelSerializer):
         )
 
 
-class LevelSentenceSpeech(serializers.ModelSerializer):
-    level_sentence = LevelSentence()
-    audio = core_serializer.AudioDataSerializer
+class LevelSentenceSpeech(serializers.Serializer):
+    anonymous_user = serializers.IntegerField(required=False)
+    level_sentence_id = serializers.IntegerField()
+    text = serializers.CharField(max_length=10000, required=False)
+    audio = serializers.FileField()
 
-    class Meta:
-        model = models.LevelSentenceSpeech
-        fields = (
-            'id',
-            'level_sentence',
-            'audio'
-        )
+    def create(self, validated_data):
+        tale_sentence_id = validated_data.get('tale_sentence_id', 0)
+        audio_file = validated_data.get('audio', None)
+        if audio_file is None:
+            raise serializers.ValidationError(_('Audio data is not defined'))
+        try:
+            level_sentence = models.LevelSentence.objects.get(pk=tale_sentence_id)
+            name = level_sentence.title
+            element_count = core_models.AudioData.objects.filter(name__icontains=name).count()
+            slug = slugify("{} {}".format(name[:40], str(element_count)))
+            print(slug)
+            print(len(slug))
+            audio_data = core_models.AudioData(
+                name=name,
+                slug=slug,
+                text=level_sentence.text,
+                audiofile=audio_file
+            )
+            audio_data.save()
+            tale_sentence_speech = models.LevelSentenceSpeech(
+                level_sentence=level_sentence,
+                audio=audio_data
+
+            )
+            tale_sentence_speech.save()
+            anonymous_id = validated_data.get('anonymous_user', False)
+            if anonymous_id:
+                print(anonymous_id)
+                print("Exists")
+                try:
+                    anonymous_profile = authentication_models.AnonymousUserProfile.objects.get(pk=anonymous_id)
+                    anonymous_audio_data = core_models.AnonymousAudioData(
+                        audio=audio_data,
+                        user=anonymous_profile
+                    )
+                    anonymous_audio_data.save()
+                    print(anonymous_audio_data)
+                except authentication_models.AnonymousUserProfile.DoesNotExist:
+                    print("Anonymous does not exists")
+
+            else:
+                print("NO ANONIMOUS ID")
+
+            return audio_data
+
+        except models.LevelSentence.DoesNotExist:
+            raise serializers.ValidationError(_('Tale sentence Does not exists'))

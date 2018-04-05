@@ -30,7 +30,8 @@ ENV = os.environ.get('ENV', "DEVELOPMENT")
 ALLOWED_HOSTS = [
     "openspeechcorpus.com",
     "localhost",
-    "openspeechcorpus.contraslash.com"
+    "openspeechcorpus.contraslash.com",
+    "10.84.5.231"
 ]
 
 

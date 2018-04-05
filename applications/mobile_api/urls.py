@@ -104,6 +104,11 @@ urlpatterns = [
         r'^level/(?P<pk_level>\d+)/category/(?P<pk_level_category>\d+)$',
         mobile_api_views.GetLevelSentence.as_view(),
         name=mobile_api_conf.APHASIA_LEVEL_CATEGORY_SENTENCES_URL_NAME
+    ),
+    url(
+        r'^words/upload/$',
+        mobile_api_views.UploadLevelSentence.as_view(),
+        name=mobile_api_conf.APHASIA_UPLOAD_LEVEL_SENTENCE_URL_NAME
     )
 
 ]

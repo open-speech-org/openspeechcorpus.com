@@ -471,3 +471,31 @@ class GetLevelSentence(APIView):
         sentences = aphasia_models.LevelSentence.objects.filter(level_category=category, level_category__level=level)
         serializers = aphasia_serializers.LevelSentence(sentences, many=True)
         return Response(serializers.data)
+
+
+class UploadLevelSentence(APIView):
+    """
+    Upload a level sentence
+    """
+
+    def post(self, request, format=None):
+        print(request.data)
+        audio_upload_tale_data = aphasia_serializers.LevelSentenceSpeech(data=request.data)
+
+        if audio_upload_tale_data.is_valid(True):
+            print("True")
+            audio_upload_tale_data.save()
+            return Response(
+                {
+                    'state': 'Success',
+                    'error': 0
+                }
+                )
+        else:
+            print("False")
+            return Response(
+                {
+                    'state': 'Failure',
+                    'error': 1
+                }
+            )
