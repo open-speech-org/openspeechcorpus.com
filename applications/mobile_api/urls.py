@@ -1,6 +1,9 @@
 from django.conf.urls import url, include
 
-from . import views as mobile_api_views
+from . import (
+    views as mobile_api_views,
+    conf as mobile_api_conf
+)
 from applications.news import api_urls as news_api_urls
 from applications.miscellany import api_urls as miscellany_api_urls
 
@@ -84,9 +87,23 @@ urlpatterns = [
         r'most_readed_sentence_speech/',
         mobile_api_views.DownloadMostReadedTales.as_view(),
         name="mobile_api_most_readed_sencente_speech"
+    ),
+
+    # #### APHASIA #####
+    url(
+        r'^levels/$',
+        mobile_api_views.GetLevels.as_view(),
+        name=mobile_api_conf.APHASIA_LEVELS_URL_NAME
+    ),
+    url(
+        r'^level/(?P<pk_level>\d+)/$',
+        mobile_api_views.GetLevelCategory.as_view(),
+        name=mobile_api_conf.APHASIA_LEVEL_CATEGORY_URL_NAME
+    ),
+    url(
+        r'^level/(?P<pk_level>\d+)/category/(?P<pk_level_category>\d+)$',
+        mobile_api_views.GetLevelSentence.as_view(),
+        name=mobile_api_conf.APHASIA_LEVEL_CATEGORY_SENTENCES_URL_NAME
     )
-
-
-
 
 ]

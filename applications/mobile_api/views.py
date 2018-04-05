@@ -5,19 +5,36 @@ from django.db import models
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from applications.tales import (
+    serializers as tales_serializers,
+    models as tales_models
+)
 
+from applications.authentication import (
+    models as authentication_models
+)
+
+from applications.suggestions import (
+    serializers as suggestions_serializers
+)
+
+from applications.core import (
+    serializers as core_serializers,
+    models as core_models
+)
+
+from applications.aphasia import (
+    models as aphasia_models,
+    serializers as aphasia_serializers
+)
 
 from . import serializers as mobile_api_serializer
-from applications.tales import serializers as tales_serializers
-from applications.tales import models as tales_models
-from applications.authentication import models as authentication_models
-from applications.suggestions import serializers as suggestions_serializers
-from applications.core import serializers as core_serializers
-from applications.core import models as core_models
-
 
 # Create your views here.
 class TalesSentencesView(APIView):
+    """
+    This view takes a random tale and return all its sentences and if a new user, creates a new anonymous user
+    """
 
     def get(self, request, format=None):
 
@@ -58,7 +75,9 @@ class TalesSentencesView(APIView):
 
 
 class UploadTaleSetenceView(APIView):
-
+    """
+    Given a raw audio and a tale this view stores audio and text in database and file storage
+    """
     def post(self, request, format=None):
         print(request.data)
         audio_upload_tale_data = mobile_api_serializer.AudioTaleSentenceUploadSerializer(data=request.data)
@@ -83,7 +102,9 @@ class UploadTaleSetenceView(APIView):
 
 
 class RegisterSuggestion(APIView):
-
+    """
+    This view register a suggestion, complain or comentary in database
+    """
     def post(self, request, format=None):
         suggestion_serializer = suggestions_serializers.SuggestionModelSerializer(data=request.data)
 
@@ -101,7 +122,9 @@ class RegisterSuggestion(APIView):
 
 
 class UpdateAnonymousUserProfile(APIView):
-
+    """
+    This view update an user profile
+    """
     def post(self, request, format=None):
         anonymous_id = request.data.get('anonymous_user', None)
 
@@ -146,8 +169,11 @@ class UpdateAnonymousUserProfile(APIView):
 
 
 class UploadCustomAudio(APIView):
+    """
+    This view update a custom audio
+    """
 
-    def post(self,request, format=None):
+    def post(self, request, format=None):
         print(request.data)
         audio_serializer = core_serializers.AudioDataSerializer(data=request.data)
         if audio_serializer.is_valid(True):
@@ -185,7 +211,9 @@ class UploadCustomAudio(APIView):
 
 
 class GetTales(APIView):
-
+    """
+    This view return all tales
+    """
     def get(self, request, format=None):
         offset = request.query_params.get('offset', 0)
         all_tales = tales_models.Tale.objects.filter(pk__gt=offset)
@@ -208,7 +236,9 @@ class GetTales(APIView):
 
 
 class GetAuthors(APIView):
-
+    """
+    This view return all authors
+    """
     def get(self, request, format=None):
         offset = request.query_params.get('offset', 0)
         all_authors = tales_models.Author.objects.filter(pk__gt=offset)
@@ -223,7 +253,9 @@ class GetAuthors(APIView):
 
 
 class GetTalesOfAuthor(APIView):
-
+    """
+    This view return all tales of a given author
+    """
     def get(self, request, *args, **kwargs):
         author_id = self.kwargs.get("author_id", None)
         if author_id is not None:
@@ -255,6 +287,9 @@ class GetTalesOfAuthor(APIView):
 
 
 class GetSentencesOfTale(APIView):
+    """
+    Given a Tale, this view return all his sentences
+    """
 
     def get(self, request, *args, **kwargs):
 
@@ -288,7 +323,9 @@ class GetSentencesOfTale(APIView):
 
 
 class VoteTale(APIView):
-
+    """
+    This view rates a tale
+    """
     def post(self, request, format=None):
         serializer = tales_serializers.TaleVoteSerializer(data=request.data)
         if serializer.is_valid(True):
@@ -317,6 +354,9 @@ class VoteTale(APIView):
 
 
 class GetRandomSentence(APIView):
+    """
+    Return the first sentence of a random tale
+    """
 
     def get(self, request, format=None):
         print(tales_models.TaleSentence.objects.count())
@@ -330,7 +370,9 @@ class GetRandomSentence(APIView):
 
 
 class GetNextSentence(APIView):
-
+    """
+    Get a random tale and return its first sentence
+    """
     def get(self, request, format=None):
         print(tales_models.TaleSentence.objects.count())
         print(request.query_params)
@@ -353,7 +395,9 @@ class GetNextSentence(APIView):
 
 
 class RankingTable(APIView):
-
+    """
+    Return a ranking table
+    """
     def get(self, request, format=None):
         count_datas = core_models.AnonymousAudioData.objects.values('user').annotate(
             user_count=models.Count('user')
@@ -365,7 +409,9 @@ class RankingTable(APIView):
 
 
 class DownloadMostReadedTales(APIView):
-
+    """
+    Return the most readed texts
+    """
     def get(self, request, format=None):
         offset = request.query_params.get('offset', 50)
         sentence_tales = tales_models.SentenceTaleSpeech.objects.values('tale_sentence').annotate(
@@ -383,3 +429,45 @@ class DownloadMostReadedTales(APIView):
 
         serializer = core_serializers.AudioDataSerializer(audio_datas, many=True)
         return Response(serializer.data)
+
+
+# ######## Aphasia ########
+class GetLevels(APIView):
+    """
+    Get all levels for aphasia words
+    """
+    def get(self, request, format=None):
+        all_levels = aphasia_models.Level.objects.all()
+        serializer = aphasia_serializers.Level(all_levels, many=True)
+        return Response(serializer.data)
+
+
+class GetLevelCategory(APIView):
+    """
+    Get all categories of a Level
+    """
+
+    def get_level(self):
+        return aphasia_models.Level.objects.get(pk=self.kwargs.get("pk_level", 0))
+
+    def get(self, request, format=None, *args, **kwargs):
+        level = self.get_level()
+        categories_for_level = aphasia_models.LevelCategory.objects.filter(level=level)
+        serializer = aphasia_serializers.LevelCategory(categories_for_level, many=True)
+        return Response(serializer.data)
+
+
+class GetLevelSentence(APIView):
+
+    def get_level(self):
+        return aphasia_models.Level.objects.get(pk=self.kwargs.get("pk_level", 0))
+
+    def get_category(self):
+        return aphasia_models.LevelCategory.objects.get(pk=self.kwargs.get("pk_level_category", 0))
+
+    def get(self, request, format=None, *args, **kwargs):
+        level = self.get_level()
+        category = self.get_category()
+        sentences = aphasia_models.LevelSentence.objects.filter(level_category=category, level_category__level=level)
+        serializers = aphasia_serializers.LevelSentence(sentences, many=True)
+        return Response(serializers.data)
