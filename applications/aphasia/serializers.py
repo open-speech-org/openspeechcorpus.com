@@ -105,3 +105,4 @@ class LevelSentenceSpeech(serializers.Serializer):
 
         except models.LevelSentence.DoesNotExist:
             raise serializers.ValidationError(_('Tale sentence Does not exists'))
+
