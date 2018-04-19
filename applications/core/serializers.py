@@ -13,6 +13,7 @@ class AudioDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = core_models.AudioData
         fields = (
+            'id',
             'text',
             'audiofile',
         )
