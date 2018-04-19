@@ -12,7 +12,8 @@ from applications.authentication import (
 )
 
 from applications.core import (
-    models as core_models
+    models as core_models,
+    serializers as core_serializers
 )
 
 
@@ -106,3 +107,24 @@ class LevelSentenceSpeech(serializers.Serializer):
         except models.LevelSentence.DoesNotExist:
             raise serializers.ValidationError(_('Tale sentence Does not exists'))
 
+
+class LevelSentenceText(serializers.ModelSerializer):
+    class Meta:
+        model = models.LevelSentence
+        fields = (
+            'text',
+        )
+
+
+class AnnotatedLevelSentenceSpeech(serializers.ModelSerializer):
+
+    audio = core_serializer.AudioDataSerializer()
+    level_sentence = LevelSentenceText()
+
+    class Meta:
+        model = models.LevelSentenceSpeech
+        fields = (
+            'id',
+            'audio',
+            'level_sentence',
+        )

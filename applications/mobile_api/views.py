@@ -499,3 +499,22 @@ class UploadLevelSentence(APIView):
                     'error': 1
                 }
             )
+
+
+class GetLevelSentenceSpeech(APIView):
+
+    serializer_class = aphasia_serializers.AnnotatedLevelSentenceSpeech
+
+    def get_queryset(self, queryset=None):
+        queryset = aphasia_models.LevelSentenceSpeech.objects.all()
+        _from = self.request.GET.get("from", None)
+        _to = self.request.GET.get("to", None)
+        if _from is not None:
+            queryset = queryset.filter(id__gte=_from)
+        if _to is not None:
+            queryset = queryset.filter(id__lte=_from)
+        return queryset
+
+    def get(self, request, format=None, *args, **kwargs):
+        serializers = self.serializer_class(self.get_queryset(), many=True)
+        return Response(serializers.data)

@@ -7,3 +7,4 @@ from . import models
 admin.site.register(models.Level)
 admin.site.register(models.LevelCategory)
 admin.site.register(models.LevelSentence)
+admin.site.register(models.LevelSentenceSpeech)
