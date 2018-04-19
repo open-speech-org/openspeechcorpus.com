@@ -137,9 +137,10 @@ class RecordingsGrowth(generic.TemplateView):
         datas = []
         initial_date = all_recordings[0].created
         date = initial_date
+        days_to_group = self.request.GET.get("days", 7)
         while date < timezone.make_aware(datetime.today(), timezone.get_default_timezone()):
-            new_date = date + timedelta(days=1)
-            date_element = {}
+            new_date = date + timedelta(days=days_to_group)
+            date_element = dict()
             date_element['date'] = new_date
             date_element['count'] = all_recordings.filter(created__range=[initial_date, new_date]).count()
             recordings_count.append(date_element)
@@ -171,11 +172,4 @@ class CountSentenceTales(generic.TemplateView):
         context['count'] = sentence_tales
 
         return context
-
-
-
-
-
-
-
 

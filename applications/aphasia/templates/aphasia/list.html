@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% block content %}
+    <div class="container">
+        {% for record in recordings %}
+            <div class="card">
+                <div class="card-title black-text">
+                    <a href="{% url 'recording_view' record.audio.slug %}">
+                        {{ record}}
+                    </a>
+                </div>
+    {#            <div class="card-content">#}
+    {#                {{ store.address }}#}
+    {#            </div>#}
+            </div>
+        {% endfor %}
+
+        <div class="row ">
+            <div class="col s12">
+                <h3>
+                    {% trans 'Total Recordings' %} {{ total_recordings }}
+
+                </h3>
+            </div>
+            <div class="col m4 s8 offset-m4 offset-s2">
+                <ul class="pagination ">
+
+                    {% if recordings.has_previous %}
+                        <li>
+                            <a href="?page={{ recordings.previous_page_number }}">
+                                <i class="material-icons">
+                                    chevron_left
+                                </i>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    {% for i in range %}
+                        {% if i == recordings.number %}
+                            <li class="active black">
+                                <a href="#!">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="waves-effect">
+                                <a href="?page={{ i }}">
+                                    {{ i }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if recordings.has_next %}
+                        <li>
+                            <a href="?page={{ recordings.next_page_number }}">
+                                <i class="material-icons">
+                                    chevron_right
+                                </i>
+                            </a>
+                        </li>
+                    {% endif %}
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+{% endblock %}
