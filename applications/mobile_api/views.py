@@ -437,7 +437,7 @@ class GetLevels(APIView):
     Get all levels for aphasia words
     """
     def get(self, request, format=None):
-        all_levels = aphasia_models.Level.objects.all()
+        all_levels = aphasia_models.Level.objects.all().order_by("order")
         serializer = aphasia_serializers.Level(all_levels, many=True)
         return Response(serializer.data)
 

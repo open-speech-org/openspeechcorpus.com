@@ -8,6 +8,7 @@ from applications.core.models import AudioData
 class Level(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
+    order = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title
