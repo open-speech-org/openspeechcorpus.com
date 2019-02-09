@@ -512,7 +512,7 @@ class GetLevelSentenceSpeech(APIView):
         if _from is not None:
             queryset = queryset.filter(id__gte=_from)
         if _to is not None:
-            queryset = queryset.filter(id__lte=_from)
+            queryset = queryset.filter(id__lte=_to)
         return queryset
 
     def get(self, request, format=None, *args, **kwargs):
