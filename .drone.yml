@@ -10,13 +10,6 @@ clone:
       - DRONE_NETRC_PASSWORD=x-oauth-basic
 
 pipeline:
-  compile2:
-      image: docker
-      secrets: [docker_username,docker_password]
-      commands:
-            - docker login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD registry.contraslash.com:5000
-            - docker build -t registry.contraslash.com:5000//contraslash/openspeechcorpus -f Dockerfile .
-            - docker push registry.contraslash.com:5000/contraslash/openspeechcorpus
   compile:
       image: plugins/docker
       repo: registry.contraslash.com:5000/contraslash/openspeechcorpus
