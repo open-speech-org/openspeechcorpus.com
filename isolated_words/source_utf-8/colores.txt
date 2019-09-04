@@ -1,0 +1,12 @@
+ï»¿Color
+Amarillo
+Azul
+Rojo
+Verde
+Naranja
+Violeta
+CafÃ©
+Negro
+Blanco
+Gris
+Rosado 

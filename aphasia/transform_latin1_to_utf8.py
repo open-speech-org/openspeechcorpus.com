@@ -1,5 +1,5 @@
 import codecs
-from os import listdir
+from os import listdir, mkdir
 from os.path import exists, isdir, abspath, join
 
 
@@ -52,6 +52,8 @@ transform_all_files("lexicon", "lexicon_utf_8")
     :param out_folder: 
     :return: 
     """
+    if not exists(out_folder):
+        mkdir(out_folder)
     all_files = get_all_files_and_nested(in_folder)
     for in_file in all_files:
         out_file_name = in_file.replace(in_folder, out_folder)

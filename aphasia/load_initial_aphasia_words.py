@@ -19,13 +19,13 @@ load_levels("aphasia/lexicon_utf_8")
     a = listdir(file_path)
     for b in a:
         if isdir(join(file_path, b)):
-            level_name = humanizate(b)
+            level_name = humanize(b)
             print(level_name)
             level = aphasia_models.Level(title=level_name)
             level.save()
             c = listdir(join(file_path, b))
             for d in c:
-                title = humanizate(d)
+                title = humanize(d)
                 print("-{}".format(title))
                 level_category = aphasia_models.LevelCategory(
                     title=title,
@@ -45,10 +45,10 @@ load_levels("aphasia/lexicon_utf_8")
                     level_sentence.save()
 
 
-def humanizate(string):
+def humanize(string):
     new_string = string.replace('.txt', '')
     new_string = new_string.replace('_', ' ')
-    new_string = new_string[:1].upper()+new_string[1:]
+    new_string = new_string.capitalize()
     return new_string
 
 # load_authors("../textos-procesados/")
