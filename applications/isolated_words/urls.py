@@ -9,6 +9,6 @@ urlpatterns = [
     url(
         '^list/$',
         views.List.as_view(),
-        name=conf.LEVELSENTENCESPEECH_LIST_URL_NAME
+        name=conf.ISOLATED_WORD_SPEECH_LIST_URL_NAME
     )
 ]

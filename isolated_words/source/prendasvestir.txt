@@ -1,0 +1,11 @@
+﻿Camisa
+Pantalón
+Blusa
+Falda
+Saco
+Gorro
+Sombrero
+Zapato
+Medias
+Guantes
+Pantaloneta

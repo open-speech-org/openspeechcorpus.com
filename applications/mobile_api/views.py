@@ -28,6 +28,11 @@ from applications.aphasia import (
     serializers as aphasia_serializers
 )
 
+from applications.isolated_words import (
+    models as isolated_words_models,
+    serializers as isolated_words_serializers
+)
+
 from . import serializers as mobile_api_serializer
 
 # Create your views here.
@@ -518,3 +523,54 @@ class GetLevelSentenceSpeech(APIView):
     def get(self, request, format=None, *args, **kwargs):
         serializers = self.serializer_class(self.get_queryset(), many=True)
         return Response(serializers.data)
+
+
+# ######## Isolated Words ########
+class GetIsolatedCategories(APIView):
+    """
+    Get all levels for aphasia words
+    """
+    def get(self, request, format=None):
+        all_categories = isolated_words_models.Category.objects.all().order_by("order")
+        serializer = isolated_words_serializers.Category(all_categories, many=True)
+        return Response(serializer.data)
+
+
+class GetIsolatedWordsByCategory(APIView):
+
+    def get_category(self):
+        return aphasia_models.Level.objects.get(pk=self.kwargs.get("pk_category", 0))
+
+    def get(self, request, format=None, *args, **kwargs):
+        category = self.get_category()
+        words = isolated_words_models.IsolatedWord.objects.filter(category=category)
+        serializers = isolated_words_serializers.IsolatedWord(words, many=True)
+        return Response(serializers.data)
+
+
+class UploadIsolatedWordSentence(APIView):
+    """
+    Upload a level sentence
+    """
+
+    def post(self, request, format=None):
+        print(request.data)
+        audio_upload_isolated_word = isolated_words_serializers.IsolatedWordSpeech(data=request.data)
+
+        if audio_upload_isolated_word.is_valid(True):
+            print("True")
+            audio_upload_isolated_word.save()
+            return Response(
+                {
+                    'state': 'Success',
+                    'error': 0
+                }
+                )
+        else:
+            print("False")
+            return Response(
+                {
+                    'state': 'Failure',
+                    'error': 1
+                }
+            )

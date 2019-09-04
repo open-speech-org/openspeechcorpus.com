@@ -8,3 +8,5 @@ prod_env_vars.sh
 drone_secret_config.sh
 
 aphasia/output_folder
+
+openspeechcorpus_env

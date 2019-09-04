@@ -115,5 +115,21 @@ urlpatterns = [
         mobile_api_views.GetLevelSentenceSpeech.as_view(),
         name=mobile_api_conf.APHASIA_WORDS_URL_NAME
     ),
+    # #### Isolated words #####
+    url(
+        r'^isolated-words/categories/$',
+        mobile_api_views.GetIsolatedCategories.as_view(),
+        name=mobile_api_conf.ISOLATED_WORDS_CATEGORY_URL_NAME
+    ),
+    url(
+        r'^isolated-words/(?P<pk_category>\d+)$',
+        mobile_api_views.GetIsolatedWordsByCategory.as_view(),
+        name=mobile_api_conf.ISOLATED_WORDS_WORDS_LIST_URL_NAME
+    ),
+    url(
+        r'^isolated-words/upload/$',
+        mobile_api_views.UploadIsolatedWordSentence.as_view(),
+        name=mobile_api_conf.ISOLATED_WORDS_UPLOAD_WORD_URL_NAME
+    ),
 
 ]

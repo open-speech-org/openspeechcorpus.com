@@ -1,0 +1,10 @@
+﻿Computador
+Celular
+Teclado
+Ratón
+Pantalla
+Facebook
+WhatsApp
+Televisión
+Radio
+Internet

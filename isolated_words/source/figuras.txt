@@ -1,0 +1,5 @@
+﻿Triangulo
+Cuadrado
+Circulo
+Rectángulo
+Línea 

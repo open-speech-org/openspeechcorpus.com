@@ -1,0 +1,11 @@
+﻿Ojo
+Nariz
+Boca
+Oreja
+Cabello
+Manos
+Brazos
+Piernas
+Pies
+Cabeza
+Tronco

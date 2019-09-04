@@ -1,0 +1,8 @@
+Caminar
+Correr
+Nadar
+Jugar
+Comer
+Dormir
+Limpiar
+Bañar

@@ -58,6 +58,7 @@ INSTALLED_APPS = (
     'applications.miscellany',
     'applications.webapp',
     'applications.aphasia',
+    'applications.isolated_words',
 
 
     # Third party Apps

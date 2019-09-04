@@ -1,0 +1,7 @@
+﻿Moto
+Carro
+Bicicleta
+Bus
+Tren
+Avión
+Ambulancia 
