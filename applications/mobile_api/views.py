@@ -539,7 +539,7 @@ class GetIsolatedCategories(APIView):
 class GetIsolatedWordsByCategory(APIView):
 
     def get_category(self):
-        return aphasia_models.Level.objects.get(pk=self.kwargs.get("pk_category", 0))
+        return isolated_words_models.Category.objects.get(pk=self.kwargs.get("pk_category", 0))
 
     def get(self, request, format=None, *args, **kwargs):
         category = self.get_category()
