@@ -31,7 +31,7 @@ ALLOWED_HOSTS = [
     "openspeechcorpus.com",
     "localhost",
     "openspeechcorpus.contraslash.com",
-    "192.168.1.54"
+    "192.168.1.59"
 ]
 
 
@@ -160,3 +160,15 @@ if ENV == "PRODUCTION":
 
 
 MEDIA_URL = '/media/'
+
+# For local testing
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME', "bucket_name")
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID', "3306")
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY', "3306")
+
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+DEFAULT_FILE_STORAGE = 'openspeechcorpus.storages.MediaStorage'
+MEDIAFILES_LOCATION = 'openspeechcorpus/media'
+AWS_MEDIA_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_S3_CUSTOM_DOMAIN

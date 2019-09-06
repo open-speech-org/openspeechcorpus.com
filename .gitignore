@@ -4,6 +4,8 @@ audio-data
 media
 *.pyc
 
+mysqldata
+secret_folder
 prod_env_vars.sh
 drone_secret_config.sh
 
