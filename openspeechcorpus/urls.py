@@ -28,6 +28,7 @@ urlpatterns = [
     path('contributors/', include('applications.user_profile.urls')),
     path('webapp/', include('applications.webapp.urls')),
     path('aphasia/', include('applications.aphasia.urls')),
+    path('isolated-words/', include('applications.isolated_words.urls')),
 
 
     # Media URL

@@ -6,7 +6,7 @@ from . import models
 
 
 class List(generic.ListView):
-    template_name = "aphasia/list.html"
+    template_name = "isolated_words/list.html"
     context_object_name = "recordings"
     queryset = models.IsolatedWordSpeech.objects.all().order_by("-id")
 
