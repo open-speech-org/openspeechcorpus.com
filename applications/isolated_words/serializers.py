@@ -93,3 +93,25 @@ class IsolatedWordSpeech(serializers.Serializer):
 
         except models.IsolatedWord.DoesNotExist:
             raise serializers.ValidationError(_('Isolated word Does not exists'))
+
+
+class IsolatedWordText(serializers.ModelSerializer):
+    class Meta:
+        model = models.IsolatedWord
+        fields = (
+            'text',
+        )
+
+
+class AnnotatedIsolatedWordSpeech(serializers.ModelSerializer):
+
+    audio = core_serializer.AudioDataSerializer()
+    isolated_word = IsolatedWordText()
+
+    class Meta:
+        model = models.IsolatedWordSpeech
+        fields = (
+            'id',
+            'audio',
+            'isolated_word',
+        )

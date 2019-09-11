@@ -578,7 +578,7 @@ class UploadIsolatedWordSentence(APIView):
 
 class GetIsolatedWordSpeech(APIView):
 
-    serializer_class = isolated_words_serializers.IsolatedWordSpeech
+    serializer_class = isolated_words_serializers.AnnotatedIsolatedWordSpeech
 
     def get_queryset(self, queryset=None):
         queryset = isolated_words_models.IsolatedWordSpeech.objects.all()

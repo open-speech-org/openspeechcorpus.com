@@ -132,4 +132,9 @@ urlpatterns = [
         name=mobile_api_conf.ISOLATED_WORDS_UPLOAD_WORD_URL_NAME
     ),
 
+    url(
+        r'^isolated-words/list/$',
+        mobile_api_views.GetIsolatedWordSpeech.as_view(),
+        name=mobile_api_conf.ISOLATED_WORDS_LIST_URL_NAME
+    ),
 ]
