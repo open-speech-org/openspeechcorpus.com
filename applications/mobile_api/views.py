@@ -574,3 +574,22 @@ class UploadIsolatedWordSentence(APIView):
                     'error': 1
                 }
             )
+
+
+class GetIsolatedWordSpeech(APIView):
+
+    serializer_class = isolated_words_serializers.IsolatedWordSpeech
+
+    def get_queryset(self, queryset=None):
+        queryset = isolated_words_models.IsolatedWordSpeech.objects.all()
+        _from = self.request.GET.get("from", None)
+        _to = self.request.GET.get("to", None)
+        if _from is not None:
+            queryset = queryset.filter(id__gte=_from)
+        if _to is not None:
+            queryset = queryset.filter(id__lte=_to)
+        return queryset
+
+    def get(self, request, format=None, *args, **kwargs):
+        serializers = self.serializer_class(self.get_queryset(), many=True)
+        return Response(serializers.data)
