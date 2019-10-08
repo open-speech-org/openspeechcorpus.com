@@ -37,8 +37,23 @@ class Permission(models.Model):
 # Custom authentication
 
 class AnonymousUserProfile(models.Model):
+    GENDER_CHOICES = (
+        ('F', 'Female'),
+        ('M', 'Male')
+    )
     anonymous_name = models.CharField(max_length=100)
     anonymous_picture = models.ImageField(upload_to='anonymous_pictures', blank=True, null=True)
+    gender = models.CharField(
+        max_length=1,
+        choices=GENDER_CHOICES,
+        null=True,
+        default=''
+    )
+    age = models.PositiveIntegerField(default=1)
+    accent = models.TextField(default="", blank=True)
+    pitch = models.TextField(default="", blank=True)
+    height = models.PositiveIntegerField(default=1)
+    weight = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return "{} {}".format(str(self.id), self.anonymous_name)

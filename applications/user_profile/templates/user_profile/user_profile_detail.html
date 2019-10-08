@@ -19,6 +19,29 @@
         <h5>{% trans 'Total recordings: ' %}{{ total_recordings }}</h5>
 
     </div>
+    {% if request.user.is_authenticated %}
+        <div class="row">
+            <div class="col">
+                <dl>
+                    <dt>
+                        Gender
+                    </dt>
+                    <dd>
+                        {{ user_profile.gender }}
+                    </dd>
+                    <dt>
+                        Age
+                    </dt>
+                    <dd>
+                        {{ user_profile.age }}
+                    </dd>
+                </dl>
+                <a href="{% url 'user_profiles_update' user_profile.id %}" class="btn btn-primary">
+                    Update
+                </a>
+            </div>
+        </div>
+    {% endif %}
     {% for record in recordings %}
         <div class="card">
             <div class="card-title black-text">

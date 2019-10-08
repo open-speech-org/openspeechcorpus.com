@@ -1,11 +1,15 @@
 from django.shortcuts import render
 from django.views import generic
 from django.core import paginator
+from django.urls import reverse_lazy
 
 from applications.authentication import models as authentication_models
 from applications.core import models as core_models
+from applications.user_profile import forms
 
 # Create your views here.
+
+
 class ProfileView(generic.DetailView):
     template_name = "user_profile/user_profile_detail.html"
     model = authentication_models.AnonymousUserProfile
@@ -33,7 +37,18 @@ class ProfileView(generic.DetailView):
             context['recordings'] = pager.page(pager.num_pages)
         return context
 
+
 class UserProfileList(generic.ListView):
     template_name = "user_profile/user_profile_list.html"
     queryset = authentication_models.AnonymousUserProfile.objects.all()
     context_object_name = "user_profiles"
+
+
+class ProfileUpdate(generic.UpdateView):
+    template_name = "user_profile/user_profile_update.html"
+    model = authentication_models.AnonymousUserProfile
+    form_class = forms.SpeakerCharacterization
+    context_object_name = "user_profile"
+
+    def get_success_url(self):
+        return reverse_lazy('user_profiles_detail', kwargs={"pk": self.object.pk})
