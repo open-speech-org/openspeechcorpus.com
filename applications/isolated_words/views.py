@@ -1,7 +1,10 @@
 from django.views import generic
 from django.core import paginator
 
+from django.db.models import Count
+
 from . import models
+from applications.authentication import models as authentication_models
 # Create your views here.
 
 
@@ -28,5 +31,25 @@ class List(generic.ListView):
             context['recordings'] = pager.page(1)
         except paginator.EmptyPage:
             context['recordings'] = pager.page(pager.num_pages)
+
+        return context
+
+
+class SortedByContributors(generic.TemplateView):
+    template_name = 'static_html/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SortedByContributors, self).get_context_data()
+
+        count_datas = models.IsolatedWordSpeech.objects.values('audio__anonymousaudiodata__user').annotate(
+            user_count=Count('audio__anonymousaudiodata__user')
+        ).order_by('-user_count')
+
+        for count_data in count_datas:
+            count_data['audio__anonymousaudiodata__user'] = authentication_models.AnonymousUserProfile.objects.get(
+                pk=count_data['audio__anonymousaudiodata__user']
+            ) if count_data['audio__anonymousaudiodata__user'] else None
+
+        context['ranking'] = count_datas
 
         return context

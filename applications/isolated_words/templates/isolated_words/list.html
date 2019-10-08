@@ -2,6 +2,9 @@
 {% load i18n %}
 {% block content %}
     <div class="container">
+        <a href="{% url 'isolated_word_speech_contributors' %}" class="btn btn-primary">
+            Contributors
+        </a>
         {% for record in recordings %}
             <div class="card">
                 <div class="card-title black-text">

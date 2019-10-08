@@ -173,3 +173,6 @@ class CountSentenceTales(generic.TemplateView):
 
         return context
 
+
+# from django.db.models import Count
+# models.AnonymousAudioData.objects.values('user').annotate(user_count=Count('user')).filter(user_count__gte=10)

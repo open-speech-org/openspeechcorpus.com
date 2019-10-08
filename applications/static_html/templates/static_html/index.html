@@ -34,7 +34,11 @@
                                  {{ forloop.counter }}
                              </td>
                              <td>
-                                 <a href="{% url 'user_profiles_detail' rank.user.id %}">{{ rank.user }}</a>
+                                 {% if rank.user %}
+                                    <a href="{% url 'user_profiles_detail' rank.user.id %}">{{ rank.user }}</a>
+                                 {% else %}
+                                     --
+                                 {% endif %}
                              </td>
                             <td>
                                 {{ rank.user_count }}
