@@ -48,7 +48,7 @@ class SortedByContributors(generic.TemplateView):
         print(count_datas)
 
         for count_data in count_datas:
-            count_data['audio__anonymousaudiodata__user'] = authentication_models.AnonymousUserProfile.objects.get(
+            count_data['user'] = authentication_models.AnonymousUserProfile.objects.get(
                 pk=count_data['audio__anonymousaudiodata__user']
             ) if count_data['audio__anonymousaudiodata__user'] else None
 

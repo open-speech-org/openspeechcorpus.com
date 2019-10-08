@@ -46,10 +46,27 @@ class SortedByContributors(generic.TemplateView):
         ).order_by('-user_count')
 
         for count_data in count_datas:
-            count_data['audio__anonymousaudiodata__user'] = authentication_models.AnonymousUserProfile.objects.get(
+            count_data['user'] = authentication_models.AnonymousUserProfile.objects.get(
                 pk=count_data['audio__anonymousaudiodata__user']
             ) if count_data['audio__anonymousaudiodata__user'] else None
 
         context['ranking'] = count_datas
 
         return context
+
+"""
+from django.db.models import Count
+from applications.isolated_words import models
+from applications.authentication import models as authentication_models
+count_datas = models.IsolatedWordSpeech.objects.values('audio__anonymousaudiodata__user').annotate(
+    user_count=Count('audio__anonymousaudiodata__user')
+).order_by('-user_count')
+count_datas
+for count_data in count_datas:
+    count_data['user'] = authentication_models.AnonymousUserProfile.objects.get(
+        pk=count_data['audio__anonymousaudiodata__user']
+    ) if count_data['audio__anonymousaudiodata__user'] else None
+
+
+count_datas
+"""
