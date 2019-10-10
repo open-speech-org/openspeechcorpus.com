@@ -7,14 +7,14 @@
     <div class="container">
 
 
-    <h1 class="center">
-        {% trans "Open Speech Corpus" %}
-    </h1>
+        <h1 class="center">
+            {% trans "Open Speech Corpus" %}
+        </h1>
 
-    <div class="row">
-        <div class="col s12">
-            <table class="striped">
-                <thead>
+        <div class="row">
+            <div class="col s12">
+                <table class="striped">
+                    <thead>
                     <tr>
                         <th>
                             {% trans 'Rank' %}
@@ -22,38 +22,62 @@
                         <th>
                             {% trans 'Contributor' %}
                         </th>
+                        {% if user.is_authenticated %}
+                            <th>
+                                {% trans 'Age' %}
+                            </th>
+                            <th>
+                                {% trans 'Gender' %}
+                            </th>
+                        {% endif %}
                         <th>
-                           {% trans 'Total Recordings' %}
+                            {% trans 'Total Recordings' %}
                         </th>
                     </tr>
-                </thead>
-                <tbody>
+                    </thead>
+                    <tbody>
                     {% for rank in ranking %}
                         <tr>
                             <td>
-                                 {{ forloop.counter }}
-                             </td>
-                             <td>
-                                 {% if rank.user %}
+                                {{ forloop.counter }}
+                            </td>
+                            <td>
+                                {% if rank.user %}
                                     <a href="{% url 'user_profiles_detail' rank.user.id %}">{{ rank.user }}</a>
-                                 {% else %}
-                                     --
-                                 {% endif %}
-                             </td>
+                                {% else %}
+                                    --
+                                {% endif %}
+                            </td>
+                            {% if user.is_authenticated %}
+                                <td>
+                                    {% if rank.user %}
+                                        {{ rank.user.age }}
+                                    {% else %}
+                                         --
+                                     {% endif %}
+                                </td>
+                                <td>
+                                    {% if rank.user %}
+                                        {{ rank.user.gender }}
+                                    {% else %}
+                                         --
+                                     {% endif %}
+                                </td>
+                            {% endif %}
                             <td>
                                 {{ rank.user_count }}
                             </td>
                         </tr>
                     {% endfor %}
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <p>
-        {% blocktrans  %}
-            A collaborative space to donate and get open speech resources
-        {% endblocktrans %}
-    </p>
+        <p>
+            {% blocktrans  %}
+                A collaborative space to donate and get open speech resources
+            {% endblocktrans %}
+        </p>
     </div>
 {% endblock %}
