@@ -49,12 +49,14 @@ def create_file_with_name_and_content(file_path, content):
 class OPSScrapper(object):
     SENTENCES_URL_NAME = "sentences"
     AUTHORS_URL_NAME = "authors"
+    AUTHOR_URL_NAME = "author"
     TALES_URL_NAME = "tales"
     TALE_URL_NAME = "tale"
 
     URLS = {
         SENTENCES_URL_NAME: "/api/sentences",
         AUTHORS_URL_NAME: "/api/authors",
+        AUTHOR_URL_NAME: "/api/tales/{}",
         TALES_URL_NAME: "/api/tales",
         TALE_URL_NAME: "/api/sentences/{}"
     }
@@ -66,6 +68,7 @@ class OPSScrapper(object):
         """
         self._base_url = base_url
         self.output_folder = output_folder
+        create_dir_if_does_not_exists(output_folder)
         self.api_folder = os.path.join(self.output_folder, "api")
         create_dir_if_does_not_exists(self.api_folder)
 
@@ -126,6 +129,20 @@ class OPSScrapper(object):
         This function scraps data from the authors api
         :return:
         """
+        url_for_all_authors = self.get_url_for(self.AUTHORS_URL_NAME)
+        url_for_author = self.get_url_for(self.AUTHOR_URL_NAME)
+        authors_dir = os.path.join(self.api_folder, "author")
+        create_dir_if_does_not_exists(authors_dir)
+        tales_dir = os.path.join(self.api_folder, "tales")
+        create_dir_if_does_not_exists(tales_dir)
+        self.generic_master_detail_scrap(
+            url_for_all_authors,
+            url_for_author,
+            authors_dir,
+            tales_dir,
+            "Author",
+            "authors"
+        )
 
     def scrap_tales_sentences(self):
         """
@@ -133,10 +150,11 @@ class OPSScrapper(object):
         :return: None
         """
         url_for_all_tales = self.get_url_for(self.TALES_URL_NAME)
-        tales_response = requests.get(url_for_all_tales)
         url_for_tale = self.get_url_for(self.TALE_URL_NAME)
         tales_dir = os.path.join(self.api_folder, "tales")
+        create_dir_if_does_not_exists(tales_dir)
         sentences_dir = os.path.join(self.api_folder, "sentences")
+        create_dir_if_does_not_exists(sentences_dir)
         self.generic_master_detail_scrap(
             url_for_all_tales,
             url_for_tale,
@@ -145,30 +163,6 @@ class OPSScrapper(object):
             "Tales",
             "tales"
         )
-        if tales_response.ok:
-            tales = tales_response.json()
-            create_dir_if_does_not_exists(tales_dir)
-            create_file_with_name_and_content(os.path.join(tales_dir, "index.json"), tales_response.content.decode())
-            LOGGER.info("Tales fetched")
-            LOGGER.debug(tales)
-            for tale in tales.get("tales", list()):
-                tale_id = str(tale.get("id", 0))
-                single_tale_response = requests.get(url_for_tale)
-                if single_tale_response.ok:
-                    create_file_with_name_and_content(
-                        os.path.join(tales_dir, tale_id),
-                        single_tale_response.content.decode()
-                    )
-                    LOGGER.info(f"Tale with id {tale_id} with status OK")
-                    LOGGER.debug(tale)
-                else:
-                    LOGGER.error(
-                        f"Error calling {url_for_tale}, http error code: {single_tale_response.status_code}"
-                    )
-        else:
-            LOGGER.error(
-                f"Error calling {url_for_all_tales}, http error code: {tales_response.status_code}"
-            )
 
     def scrap_ops(self):
         """
@@ -177,6 +171,7 @@ class OPSScrapper(object):
         :return: None
         """
         self.scrap_tales_sentences()
+        self.scrap_authors()
 
 
 if __name__ == '__main__':
