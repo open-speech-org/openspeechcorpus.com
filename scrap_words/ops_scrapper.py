@@ -76,15 +76,15 @@ class OPSScrapper(object):
         return f"{base_url}{self.URLS[url_name]}"
 
     def generic_master_detail_scrap(
-            self,
-            master_url,
-            detail_url,
-            master_output_path,
-            detail_output_path,
-            entity_name,
-            master_response_node_with_detail_info,
-            master_output_name="index.json",
-            attribute_to_extract_and_name_detail="id"
+        self,
+        master_url,
+        detail_url,
+        master_output_path,
+        detail_output_path,
+        entity_name,
+        master_response_node_with_detail_info,
+        master_output_name="index.json",
+        attribute_to_extract_and_name_detail="id"
     ):
         """
         This functions has utilities to scrap an entity and its related detail
@@ -124,22 +124,44 @@ class OPSScrapper(object):
                         f"Error calling {detail_url}, http error code: {detail_response.status_code}"
                     )
 
+    def orchestrate_master_detail(
+        self,
+        master_url_name,
+        detail_url_name,
+        api_folder_master_name,
+        api_folder_detail_name,
+        entity_name,
+        master_response_node_with_detail_info,
+    ):
+        """
+        This is a function to orchestrate the behavior for a master detail scrapper
+        :return:
+        """
+        url_for_master = self.get_url_for(master_url_name)
+        url_for_detail = self.get_url_for(detail_url_name)
+        master_dir = os.path.join(self.api_folder, api_folder_master_name)
+        create_dir_if_does_not_exists(master_dir)
+        detail_dir = os.path.join(self.api_folder, api_folder_detail_name)
+        create_dir_if_does_not_exists(detail_dir)
+        self.generic_master_detail_scrap(
+            url_for_master,
+            url_for_detail,
+            master_dir,
+            detail_dir,
+            entity_name,
+            master_response_node_with_detail_info
+        )
+
     def scrap_authors(self):
         """
         This function scraps data from the authors api
         :return:
         """
-        url_for_all_authors = self.get_url_for(self.AUTHORS_URL_NAME)
-        url_for_author = self.get_url_for(self.AUTHOR_URL_NAME)
-        authors_dir = os.path.join(self.api_folder, "author")
-        create_dir_if_does_not_exists(authors_dir)
-        tales_dir = os.path.join(self.api_folder, "tales")
-        create_dir_if_does_not_exists(tales_dir)
-        self.generic_master_detail_scrap(
-            url_for_all_authors,
-            url_for_author,
-            authors_dir,
-            tales_dir,
+        self.orchestrate_master_detail(
+            self.AUTHORS_URL_NAME,
+            self.AUTHOR_URL_NAME,
+            "author",
+            "tales",
             "Author",
             "authors"
         )
@@ -149,17 +171,11 @@ class OPSScrapper(object):
         This function scraps data from the tales api
         :return: None
         """
-        url_for_all_tales = self.get_url_for(self.TALES_URL_NAME)
-        url_for_tale = self.get_url_for(self.TALE_URL_NAME)
-        tales_dir = os.path.join(self.api_folder, "tales")
-        create_dir_if_does_not_exists(tales_dir)
-        sentences_dir = os.path.join(self.api_folder, "sentences")
-        create_dir_if_does_not_exists(sentences_dir)
-        self.generic_master_detail_scrap(
-            url_for_all_tales,
-            url_for_tale,
-            tales_dir,
-            sentences_dir,
+        self.orchestrate_master_detail(
+            self.TALES_URL_NAME,
+            self.TALE_URL_NAME,
+            "tales",
+            "sentences",
             "Tales",
             "tales"
         )
