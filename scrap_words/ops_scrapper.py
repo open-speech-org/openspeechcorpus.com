@@ -17,7 +17,7 @@ def create_dir_if_does_not_exists(path):
     :return: None
     """
     if not os.path.exists(path):
-        os.mkdir(path)
+        os.makedirs(path, exist_ok=True)
     else:
         LOGGER.debug(f"Directory {path} already exists, skipping")
 
@@ -53,12 +53,17 @@ class OPSScrapper(object):
     TALES_URL_NAME = "tales"
     TALE_URL_NAME = "tale"
 
+    ISOLATED_CATEGORY = "isolated_category"
+    ISOLATED_BY_CATEGORY = "isolated_by_category"
+
     URLS = {
         SENTENCES_URL_NAME: "/api/sentences",
         AUTHORS_URL_NAME: "/api/authors",
         AUTHOR_URL_NAME: "/api/tales/{}",
         TALES_URL_NAME: "/api/tales",
-        TALE_URL_NAME: "/api/sentences/{}"
+        TALE_URL_NAME: "/api/sentences/{}",
+        ISOLATED_CATEGORY: "/api/isolated-words/categories",
+        ISOLATED_BY_CATEGORY: "/api/isolated-words/{}"
     }
 
     def __init__(self, base_url, output_folder):
@@ -108,7 +113,10 @@ class OPSScrapper(object):
             )
             LOGGER.info(f"{entity_name} fetched")
             LOGGER.debug(master_json_content)
-            for detail in master_json_content.get(master_response_node_with_detail_info, []):
+            container = master_json_content.get(master_response_node_with_detail_info, []) \
+                if master_response_node_with_detail_info else \
+                master_json_content
+            for detail in container:
                 detail_identifier = str(detail.get(attribute_to_extract_and_name_detail))
                 detail_response = requests.get(detail_url.format(detail_identifier))
                 if detail_response.ok:
@@ -180,14 +188,29 @@ class OPSScrapper(object):
             "tales"
         )
 
+    def scrap_isolated_words(self):
+        """
+        This function scraps data from the isolated words API
+        :return: None
+        """
+        self.orchestrate_master_detail(
+            self.ISOLATED_CATEGORY,
+            self.ISOLATED_BY_CATEGORY,
+            "isolated-words/categories",
+            "isolated-words",
+            "Isolated words",
+            None
+        )
+
     def scrap_ops(self):
         """
         Scraps all data of Open Speech Corpus into a set of files
 
         :return: None
         """
-        self.scrap_tales_sentences()
-        self.scrap_authors()
+        # self.scrap_tales_sentences()
+        # self.scrap_authors()
+        self.scrap_isolated_words()
 
 
 if __name__ == '__main__':
