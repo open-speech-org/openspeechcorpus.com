@@ -52,7 +52,8 @@ class OPSScrapper(object):
     AUTHOR_URL_NAME = "author"
     TALES_URL_NAME = "tales"
     TALE_URL_NAME = "tale"
-
+    LEVELS_URL_NAME = "levels"
+    CATEGORY_LEVELS = "category_levels"
     ISOLATED_CATEGORY = "isolated_category"
     ISOLATED_BY_CATEGORY = "isolated_by_category"
 
@@ -62,6 +63,8 @@ class OPSScrapper(object):
         AUTHOR_URL_NAME: "/api/tales/{}",
         TALES_URL_NAME: "/api/tales",
         TALE_URL_NAME: "/api/sentences/{}",
+        LEVELS_URL_NAME: "/api/levels",
+        CATEGORY_LEVELS: "/api/level/{}",
         ISOLATED_CATEGORY: "/api/isolated-words/categories",
         ISOLATED_BY_CATEGORY: "/api/isolated-words/{}"
     }
@@ -80,8 +83,8 @@ class OPSScrapper(object):
     def get_url_for(self, url_name):
         return f"{base_url}{self.URLS[url_name]}"
 
+    @staticmethod
     def generic_master_detail_scrap(
-        self,
         master_url,
         detail_url,
         master_output_path,
@@ -188,6 +191,20 @@ class OPSScrapper(object):
             "tales"
         )
 
+    def scrap_aphasia(self):
+        """
+        This function scraps data from the isolated words API
+        :return: None
+        """
+        self.orchestrate_master_detail(
+            self.LEVELS_URL_NAME,
+            self.CATEGORY_LEVELS,
+            "levels",
+            "level",
+            "Aphasia",
+            None
+        )
+
     def scrap_isolated_words(self):
         """
         This function scraps data from the isolated words API
@@ -210,7 +227,8 @@ class OPSScrapper(object):
         """
         # self.scrap_tales_sentences()
         # self.scrap_authors()
-        self.scrap_isolated_words()
+        # self.scrap_isolated_words()
+        self.scrap_aphasia()
 
 
 if __name__ == '__main__':
