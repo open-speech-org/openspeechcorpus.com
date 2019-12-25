@@ -54,6 +54,7 @@ class OPSScrapper(object):
     TALE_URL_NAME = "tale"
     LEVELS_URL_NAME = "levels"
     CATEGORY_LEVELS = "category_levels"
+    WORDS_BY_CATEGORY_LEVEL = "aphasia_words"
     ISOLATED_CATEGORY = "isolated_category"
     ISOLATED_BY_CATEGORY = "isolated_by_category"
 
@@ -65,6 +66,7 @@ class OPSScrapper(object):
         TALE_URL_NAME: "/api/sentences/{}",
         LEVELS_URL_NAME: "/api/levels",
         CATEGORY_LEVELS: "/api/level/{}",
+        WORDS_BY_CATEGORY_LEVEL: "/api/level/{}/category/{}",
         ISOLATED_CATEGORY: "/api/isolated-words/categories",
         ISOLATED_BY_CATEGORY: "/api/isolated-words/{}"
     }
@@ -92,7 +94,8 @@ class OPSScrapper(object):
         entity_name,
         master_response_node_with_detail_info,
         master_output_name="index.json",
-        attribute_to_extract_and_name_detail="id"
+        attribute_to_extract_and_name_detail="id",
+        extra_detail_process=None
     ):
         """
         This functions has utilities to scrap an entity and its related detail
@@ -104,6 +107,7 @@ class OPSScrapper(object):
         :param master_response_node_with_detail_info: Node inside the master response with the detail info
         :param master_output_name: file to store master response
         :param attribute_to_extract_and_name_detail: attribute from the master response to query detail
+        :param extra_detail_process: function to generate an extra process with the detail response
         :return:
         """
         master_response = requests.get(master_url)
@@ -130,6 +134,8 @@ class OPSScrapper(object):
                     )
                     LOGGER.info(f"{entity_name} with id {detail_identifier} with status OK")
                     LOGGER.debug(detail_decoded_content)
+                    if extra_detail_process:
+                        extra_detail_process(detail_response.json())
                 else:
                     LOGGER.error(
                         f"Error calling {detail_url}, http error code: {detail_response.status_code}"
@@ -196,6 +202,27 @@ class OPSScrapper(object):
         This function scraps data from the isolated words API
         :return: None
         """
+
+        def scrap_aphasia_levels_category(json_response):
+            for category in json_response:
+                word_by_category_response = requests.get(
+                    self.get_url_for(
+                        self.WORDS_BY_CATEGORY_LEVEL).format(
+                        category.get("level").get("id"),
+                        category.get("id")
+                    )
+                )
+                if word_by_category_response.ok:
+
+                    detail_decoded_content = word_by_category_response.content.decode()
+                    create_file_with_name_and_content(
+                        os.path.join(detail_output_path, detail_identifier),
+                        detail_decoded_content
+                    )
+                    LOGGER.info(f"Words by Cagtegory with id {category.get('id')} with status OK")
+                    LOGGER.debug(detail_decoded_content)
+
+
         self.orchestrate_master_detail(
             self.LEVELS_URL_NAME,
             self.CATEGORY_LEVELS,
