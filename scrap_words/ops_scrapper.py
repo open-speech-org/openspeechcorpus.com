@@ -113,6 +113,7 @@ class OPSScrapper(object):
         master_response = requests.get(master_url)
         if master_response.ok:
             master_json_content = master_response.json()
+            #TODO: Can we drop this function call?
             create_dir_if_does_not_exists(master_output_path)
             create_file_with_name_and_content(
                 os.path.join(master_output_path, master_output_name),
@@ -202,35 +203,52 @@ class OPSScrapper(object):
         This function scraps data from the isolated words API
         :return: None
         """
-
-        def scrap_aphasia_levels_category(json_response):
-            for category in json_response:
-                word_by_category_response = requests.get(
-                    self.get_url_for(
-                        self.WORDS_BY_CATEGORY_LEVEL).format(
-                        category.get("level").get("id"),
-                        category.get("id")
-                    )
-                )
-                if word_by_category_response.ok:
-
-                    detail_decoded_content = word_by_category_response.content.decode()
-                    create_file_with_name_and_content(
-                        os.path.join(detail_output_path, detail_identifier),
-                        detail_decoded_content
-                    )
-                    LOGGER.info(f"Words by Cagtegory with id {category.get('id')} with status OK")
-                    LOGGER.debug(detail_decoded_content)
-
-
         self.orchestrate_master_detail(
-            self.LEVELS_URL_NAME,
-            self.CATEGORY_LEVELS,
+            ,
+            ,
             "levels",
             "level",
             "Aphasia",
             None
         )
+        levels_url = self.get_url_for(self.LEVELS_URL_NAME)
+        url_for_detail = self.get_url_for(self.CATEGORY_LEVELS)
+        levels_dir = os.path.join(self.api_folder, "levels")
+        create_dir_if_does_not_exists(levels_dir)
+        detail_dir = os.path.join(self.api_folder, "level")
+        create_dir_if_does_not_exists(detail_dir)
+        master_response = requests.get(levels_url)
+        if master_response.ok:
+            master_json_content = master_response.json()
+            create_dir_if_does_not_exists(master_output_path)
+            create_file_with_name_and_content(
+                os.path.join(master_output_path, master_output_name),
+                master_response.content.decode()
+            )
+            LOGGER.info(f"{entity_name} fetched")
+            LOGGER.debug(master_json_content)
+            container = master_json_content.get(master_response_node_with_detail_info, []) \
+                if master_response_node_with_detail_info else \
+                master_json_content
+            for detail in container:
+                detail_identifier = str(detail.get(attribute_to_extract_and_name_detail))
+                detail_response = requests.get(detail_url.format(detail_identifier))
+                if detail_response.ok:
+                    detail_decoded_content = detail_response.content.decode()
+                    create_file_with_name_and_content(
+                        os.path.join(detail_output_path, detail_identifier),
+                        detail_decoded_content
+                    )
+                    LOGGER.info(f"{entity_name} with id {detail_identifier} with status OK")
+                    LOGGER.debug(detail_decoded_content)
+                    if extra_detail_process:
+                        extra_detail_process(detail_response.json())
+                else:
+                    LOGGER.error(
+                        f"Error calling {detail_url}, http error code: {detail_response.status_code}"
+                    )
+
+
 
     def scrap_isolated_words(self):
         """
