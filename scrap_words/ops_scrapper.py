@@ -113,7 +113,7 @@ class OPSScrapper(object):
         master_response = requests.get(master_url)
         if master_response.ok:
             master_json_content = master_response.json()
-            #TODO: Can we drop this function call?
+            # TODO: Can we drop this function call?
             create_dir_if_does_not_exists(master_output_path)
             create_file_with_name_and_content(
                 os.path.join(master_output_path, master_output_name),
@@ -203,50 +203,68 @@ class OPSScrapper(object):
         This function scraps data from the isolated words API
         :return: None
         """
-        self.orchestrate_master_detail(
-            ,
-            ,
-            "levels",
-            "level",
-            "Aphasia",
-            None
-        )
         levels_url = self.get_url_for(self.LEVELS_URL_NAME)
         url_for_detail = self.get_url_for(self.CATEGORY_LEVELS)
+        url_for_category = self.get_url_for(self.WORDS_BY_CATEGORY_LEVEL)
         levels_dir = os.path.join(self.api_folder, "levels")
         create_dir_if_does_not_exists(levels_dir)
         detail_dir = os.path.join(self.api_folder, "level")
         create_dir_if_does_not_exists(detail_dir)
-        master_response = requests.get(levels_url)
-        if master_response.ok:
-            master_json_content = master_response.json()
-            create_dir_if_does_not_exists(master_output_path)
+        levels_response = requests.get(levels_url)
+        if levels_response.ok:
+            levels_json_content = levels_response.json()
             create_file_with_name_and_content(
-                os.path.join(master_output_path, master_output_name),
-                master_response.content.decode()
+                os.path.join(levels_dir, "index.json"),
+                levels_response.content.decode()
             )
-            LOGGER.info(f"{entity_name} fetched")
-            LOGGER.debug(master_json_content)
-            container = master_json_content.get(master_response_node_with_detail_info, []) \
-                if master_response_node_with_detail_info else \
-                master_json_content
-            for detail in container:
-                detail_identifier = str(detail.get(attribute_to_extract_and_name_detail))
-                detail_response = requests.get(detail_url.format(detail_identifier))
-                if detail_response.ok:
-                    detail_decoded_content = detail_response.content.decode()
+            LOGGER.info(f"Aphasia fetched")
+            LOGGER.debug(levels_json_content)
+            for detail in levels_json_content:
+                level_identifier = str(detail.get("id"))
+                current_level_path = os.path.join(levels_dir, level_identifier)
+                create_dir_if_does_not_exists(current_level_path)
+                level_url = url_for_detail.format(level_identifier)
+                level_response = requests.get(level_url)
+                if level_response.ok:
+                    level_json_content = level_response.json()
+                    level_decoded_content = level_response.content.decode()
                     create_file_with_name_and_content(
-                        os.path.join(detail_output_path, detail_identifier),
-                        detail_decoded_content
+                        os.path.join(current_level_path, "index.json"),
+                        level_decoded_content
                     )
-                    LOGGER.info(f"{entity_name} with id {detail_identifier} with status OK")
-                    LOGGER.debug(detail_decoded_content)
-                    if extra_detail_process:
-                        extra_detail_process(detail_response.json())
+                    current_category_path = os.path.join(current_level_path, "category")
+                    create_dir_if_does_not_exists(current_category_path)
+                    LOGGER.info(f"Aphasia Level with id {level_identifier} with status OK")
+                    LOGGER.debug(level_json_content)
+                    for category in level_json_content:
+                        category_identifier = str(category.get("id"))
+                        category_level_url = url_for_category.format(level_identifier, category_identifier)
+                        category_response = requests.get(category_level_url)
+                        if category_response.ok:
+                            category_json_content = category_response.json()
+                            category_decoded_content = category_response.content.decode()
+                            create_file_with_name_and_content(
+                                os.path.join(
+                                    current_category_path,
+                                    category_identifier
+                                ),
+                                category_decoded_content
+                            )
+                            LOGGER.info(f"Category Level with id {category_identifier} with status OK")
+                            LOGGER.debug(category_json_content)
+                        else:
+                            LOGGER.error(
+                                f"Error calling {category_level_url}, http error code: {category_response.status_code}"
+                            )
+
                 else:
                     LOGGER.error(
-                        f"Error calling {detail_url}, http error code: {detail_response.status_code}"
+                        f"Error calling {level_url}, http error code: {level_response.status_code}"
                     )
+        else:
+            LOGGER.error(
+                f"Error calling {levels_url}, http error code: {levels_response.status_code}"
+            )
 
 
 
