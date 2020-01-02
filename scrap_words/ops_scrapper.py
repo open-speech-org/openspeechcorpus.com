@@ -17,9 +17,10 @@ def create_dir_if_does_not_exists(path):
     :return: None
     """
     if not os.path.exists(path):
+        LOGGER.info(f"Creating directory {path}")
         os.makedirs(path, exist_ok=True)
     else:
-        LOGGER.debug(f"Directory {path} already exists, skipping")
+        LOGGER.info(f"Directory {path} already exists, skipping")
 
 
 def configure_log_level(logger_level):
@@ -208,8 +209,8 @@ class OPSScrapper(object):
         url_for_category = self.get_url_for(self.WORDS_BY_CATEGORY_LEVEL)
         levels_dir = os.path.join(self.api_folder, "levels")
         create_dir_if_does_not_exists(levels_dir)
-        detail_dir = os.path.join(self.api_folder, "level")
-        create_dir_if_does_not_exists(detail_dir)
+        level_dir = os.path.join(self.api_folder, "level")
+        create_dir_if_does_not_exists(level_dir)
         levels_response = requests.get(levels_url)
         if levels_response.ok:
             levels_json_content = levels_response.json()
@@ -221,7 +222,7 @@ class OPSScrapper(object):
             LOGGER.debug(levels_json_content)
             for detail in levels_json_content:
                 level_identifier = str(detail.get("id"))
-                current_level_path = os.path.join(levels_dir, level_identifier)
+                current_level_path = os.path.join(level_dir, level_identifier)
                 create_dir_if_does_not_exists(current_level_path)
                 level_url = url_for_detail.format(level_identifier)
                 level_response = requests.get(level_url)
@@ -250,7 +251,7 @@ class OPSScrapper(object):
                                 ),
                                 category_decoded_content
                             )
-                            LOGGER.info(f"Category Level with id {category_identifier} with status OK")
+                            LOGGER.info(f"-- Category Level with id {category_identifier} with status OK")
                             LOGGER.debug(category_json_content)
                         else:
                             LOGGER.error(
@@ -288,9 +289,9 @@ class OPSScrapper(object):
 
         :return: None
         """
-        # self.scrap_tales_sentences()
-        # self.scrap_authors()
-        # self.scrap_isolated_words()
+        self.scrap_tales_sentences()
+        self.scrap_authors()
+        self.scrap_isolated_words()
         self.scrap_aphasia()
 
 
