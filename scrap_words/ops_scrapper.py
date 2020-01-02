@@ -267,8 +267,6 @@ class OPSScrapper(object):
                 f"Error calling {levels_url}, http error code: {levels_response.status_code}"
             )
 
-
-
     def scrap_isolated_words(self):
         """
         This function scraps data from the isolated words API
