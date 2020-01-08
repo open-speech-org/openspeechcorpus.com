@@ -35,7 +35,7 @@ from applications.isolated_words import (
 
 from . import serializers as mobile_api_serializer
 
-# Create your views here.
+
 class TalesSentencesView(APIView):
     """
     This view takes a random tale and return all its sentences and if a new user, creates a new anonymous user
@@ -293,7 +293,7 @@ class GetTalesOfAuthor(APIView):
 
 class GetSentencesOfTale(APIView):
     """
-    Given a Tale, this view return all his sentences
+    Given a Tale, this view return all its sentences
     """
 
     def get(self, request, *args, **kwargs):
@@ -325,6 +325,25 @@ class GetSentencesOfTale(APIView):
                     'error': 1
                 }
             )
+
+
+class GetTaleSentenceSpeech(APIView):
+
+    serializer_class = tales_serializers.AnnotatedTaleSentenceSpeech
+
+    def get_queryset(self, queryset=None):
+        queryset = tales_models.SentenceTaleSpeech.objects.all()
+        _from = self.request.GET.get("from", None)
+        _to = self.request.GET.get("to", None)
+        if _from is not None:
+            queryset = queryset.filter(id__gte=_from)
+        if _to is not None:
+            queryset = queryset.filter(id__lte=_to)
+        return queryset
+
+    def get(self, request, format=None, *args, **kwargs):
+        serializers = self.serializer_class(self.get_queryset(), many=True)
+        return Response(serializers.data)
 
 
 class VoteTale(APIView):

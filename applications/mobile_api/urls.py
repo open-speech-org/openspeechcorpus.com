@@ -71,6 +71,12 @@ urlpatterns = [
         name="mobile_api_sentences_of_tale"
     ),
     url(
+
+        r'^tale-sentences/list/$',
+        mobile_api_views.GetTaleSentenceSpeech.as_view(),
+        name="mobile_api_tale_sentences_list"
+    ),
+    url(
         r'^news/',
         include(news_api_urls)
     ),

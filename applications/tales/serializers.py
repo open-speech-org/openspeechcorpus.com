@@ -1,6 +1,10 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework.serializers import ValidationError
+
+from applications.core import serializers as core_serializers
+
 from . import models as tales_models
+
 
 class SimpleAuthorSerializer(ModelSerializer):
     class Meta:
@@ -9,6 +13,7 @@ class SimpleAuthorSerializer(ModelSerializer):
             'id',
             'name',
         )
+
 
 class SimpleTaleSerializer(ModelSerializer):
     author = SimpleAuthorSerializer()
@@ -19,6 +24,7 @@ class SimpleTaleSerializer(ModelSerializer):
             'title',
             'author',
         )
+
 
 class TaleSerializer(ModelSerializer):
     author = SimpleAuthorSerializer()
@@ -78,3 +84,16 @@ class TaleVoteSerializer(ModelSerializer):
             raise ValidationError("Calification max value is 5.0")
         return value
 
+
+class AnnotatedTaleSentenceSpeech(ModelSerializer):
+
+    audio = core_serializers.AudioDataSerializer()
+    tale_sentence = TaleSentenceSerializer()
+
+    class Meta:
+        model = tales_models.SentenceTaleSpeech
+        fields = (
+            'id',
+            'audio',
+            'tale_sentence',
+        )
