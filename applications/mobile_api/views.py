@@ -4,6 +4,8 @@ from itertools import chain
 from django.db import models
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
+from url_filter.integrations.drf import DjangoFilterBackend
 
 from applications.tales import (
     serializers as tales_serializers,
@@ -327,9 +329,10 @@ class GetSentencesOfTale(APIView):
             )
 
 
-class GetTaleSentenceSpeech(APIView):
-
+class GetTaleSentenceSpeech(ModelViewSet):
+    filter_backends = [DjangoFilterBackend]
     serializer_class = tales_serializers.AnnotatedTaleSentenceSpeech
+    filter_fields = ['id', 'tale_sentence']
 
     def get_queryset(self, queryset=None):
         queryset = tales_models.SentenceTaleSpeech.objects.all()
@@ -525,8 +528,9 @@ class UploadLevelSentence(APIView):
             )
 
 
-class GetLevelSentenceSpeech(APIView):
-
+class GetLevelSentenceSpeech(ModelViewSet):
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['id', 'level_sentence']
     serializer_class = aphasia_serializers.AnnotatedLevelSentenceSpeech
 
     def get_queryset(self, queryset=None):
@@ -595,8 +599,9 @@ class UploadIsolatedWordSentence(APIView):
             )
 
 
-class GetIsolatedWordSpeech(APIView):
-
+class GetIsolatedWordSpeech(ModelViewSet):
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['id', 'isolated_word']
     serializer_class = isolated_words_serializers.AnnotatedIsolatedWordSpeech
 
     def get_queryset(self, queryset=None):

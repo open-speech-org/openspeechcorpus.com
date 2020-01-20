@@ -73,7 +73,7 @@ urlpatterns = [
     url(
 
         r'^tale-sentences/list/$',
-        mobile_api_views.GetTaleSentenceSpeech.as_view(),
+        mobile_api_views.GetTaleSentenceSpeech.as_view({'get': 'list'}),
         name="mobile_api_tale_sentences_list"
     ),
     url(
@@ -118,7 +118,7 @@ urlpatterns = [
     ),
     url(
         r'^words/list/$',
-        mobile_api_views.GetLevelSentenceSpeech.as_view(),
+        mobile_api_views.GetLevelSentenceSpeech.as_view({'get': 'list'}),
         name=mobile_api_conf.APHASIA_WORDS_URL_NAME
     ),
     # #### Isolated words #####
@@ -140,7 +140,7 @@ urlpatterns = [
 
     url(
         r'^isolated-words/list/$',
-        mobile_api_views.GetIsolatedWordSpeech.as_view(),
+        mobile_api_views.GetIsolatedWordSpeech.as_view({'get': 'list'}),
         name=mobile_api_conf.ISOLATED_WORDS_LIST_URL_NAME
     ),
 ]

@@ -99,6 +99,7 @@ class IsolatedWordText(serializers.ModelSerializer):
     class Meta:
         model = models.IsolatedWord
         fields = (
+            "id",
             'text',
         )
 

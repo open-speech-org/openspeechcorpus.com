@@ -112,7 +112,9 @@ class LevelSentenceText(serializers.ModelSerializer):
     class Meta:
         model = models.LevelSentence
         fields = (
+            'id',
             'text',
+
         )
 
 
