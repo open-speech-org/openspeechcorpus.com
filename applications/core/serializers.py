@@ -6,6 +6,7 @@ from rest_framework import serializers
 from django.utils.text import slugify
 
 from . import models as core_models
+from applications.authentication.serializers import AnonymousUserProfileSerializer
 
 
 class AudioDataSerializer(serializers.ModelSerializer):
@@ -34,3 +35,26 @@ class AudioDataSerializer(serializers.ModelSerializer):
             return audio_data
         else:
             return None
+
+
+class AnonymousAudioDataSerializer(serializers.ModelSerializer):
+    user = AnonymousUserProfileSerializer()
+
+    class Meta:
+        model = core_models.AnonymousAudioData
+        fields = (
+            'user',
+        )
+
+
+class FullDetailAudioData(serializers.ModelSerializer):
+    anonymous_profile = AnonymousAudioDataSerializer(source='anonymousaudiodata_set', many=True)
+
+    class Meta:
+        model = core_models.AudioData
+        fields = (
+            'id',
+            'text',
+            'audiofile',
+            'anonymous_profile'
+        )

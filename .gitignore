@@ -14,3 +14,5 @@ aphasia/output_folder
 openspeechcorpus_env
 
 output
+
+*.dump

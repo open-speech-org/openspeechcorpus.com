@@ -9,3 +9,5 @@ ISOLATED_WORDS_CATEGORY_URL_NAME = "isolated_words_categories"
 ISOLATED_WORDS_WORDS_LIST_URL_NAME = "isolated_words_word_list"
 ISOLATED_WORDS_UPLOAD_WORD_URL_NAME = "isolated_words_upload_word"
 ISOLATED_WORDS_LIST_URL_NAME = "isolated_words_list"
+
+AUDIO_DATA_DETAIL_URL_NAME = "audio_data_detail"

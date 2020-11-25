@@ -4,7 +4,7 @@ from itertools import chain
 from django.db import models
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from url_filter.integrations.drf import DjangoFilterBackend
 
 from applications.tales import (
@@ -617,3 +617,10 @@ class GetIsolatedWordSpeech(ModelViewSet):
     def get(self, request, format=None, *args, **kwargs):
         serializers = self.serializer_class(self.get_queryset(), many=True)
         return Response(serializers.data)
+
+
+class AudioDataDetail(ReadOnlyModelViewSet):
+    filter_backends = [DjangoFilterBackend]
+    filter_fields = ['id', 'isolated_word']
+    serializer_class = core_serializers.FullDetailAudioData
+    queryset = core_models.AudioData.objects.all()

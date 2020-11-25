@@ -143,4 +143,10 @@ urlpatterns = [
         mobile_api_views.GetIsolatedWordSpeech.as_view({'get': 'list'}),
         name=mobile_api_conf.ISOLATED_WORDS_LIST_URL_NAME
     ),
+
+    url(
+        r'^audio_data/(?P<pk>\d+)/$',
+        mobile_api_views.AudioDataDetail.as_view({'get': 'retrieve'}),
+        name=mobile_api_conf.AUDIO_DATA_DETAIL_URL_NAME
+    )
 ]
