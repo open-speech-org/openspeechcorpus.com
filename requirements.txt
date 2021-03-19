@@ -6,7 +6,7 @@ chardet==3.0.4
 Django==2.2.9
 django-storages==1.6.5
 django-url-filter==0.3.14
-djangorestframework==3.9.1
+djangorestframework==3.11.2
 docutils==0.14
 enum-compat==0.0.3
 idna==2.8
